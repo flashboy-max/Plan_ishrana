@@ -295,13 +295,9 @@ function generateWeekHTML(startDay, endDay, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const currentDay = getCurrentDay(); // Dobij trenutni dan
     let content = '<div class="week-days">';
 
     for (let i = startDay; i <= endDay; i++) {
-        // Preskoči trenutni dan jer se prikazuje u "Današnji fokus" sekciji
-        if (i === currentDay) continue;
-        
         const dayKey = `Dan ${i}`;
         const day = planData[dayKey];
         if (!day) continue;
@@ -348,9 +344,13 @@ function generateWeekHTML(startDay, endDay, containerId) {
         }
 
         const dayDetails = generateWeekDaySummary(day, i);
+        const currentDay = getCurrentDay();
+        const isCurrentDay = i === currentDay;
+        const currentDayClass = isCurrentDay ? 'ring-2 ring-cyan-400 ring-opacity-75' : '';
+        const currentDayBadge = isCurrentDay ? '<span class="text-xs bg-cyan-500 text-white px-2 py-0.5 rounded-full ml-2">DANAS</span>' : '';
 
         content += `
-            <div class="day-container border ${borderColor} rounded-lg overflow-hidden transition-all duration-200 hover:shadow-lg">
+            <div class="day-container border ${borderColor} ${currentDayClass} rounded-lg overflow-hidden transition-all duration-200 hover:shadow-lg">
                 <div class="day-card p-4 ${bgColor} cursor-pointer transition-all duration-200" data-day="${i}">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4 flex-1 min-w-0">
@@ -359,7 +359,7 @@ function generateWeekHTML(startDay, endDay, containerId) {
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center gap-3 mb-1">
-                                    <h3 class="font-bold text-white text-lg">Dan ${i}</h3>
+                                    <h3 class="font-bold text-white text-lg">Dan ${i}${currentDayBadge}</h3>
                                     <span class="text-sm ${typeColor} font-medium">${day.trening.split(' ')[0]}</span>
                                 </div>
                                 <div class="flex items-center gap-2 text-sm text-gray-400">

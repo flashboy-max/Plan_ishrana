@@ -2,11 +2,10 @@
 const startDate = new Date('2025-09-11T00:00:00');
 
 // Globalna inicijalizacija kada se stranica učita
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicijalizuj sve komponente
+document.addEventListener('DOMContentLoaded', function () {
+    // Inicijalizuj osnovne komponente
     initializeTooltips();
     initializeModals();
-    initializeChecklist();
     initializeIFTimer();
 
     // Ažuriraj progress bar na osnovu trenutnog dana
@@ -16,15 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Generisanje današnjeg fokusa
     initializeTodayFocus(currentDay);
 
-    // Generisanje sedmičnih pregleda
+    // Generisanje sedmičnih pregleda (bez checklist-a)
     generateWeekHTML(1, 7, 'sedmica-1-content');
     generateWeekHTML(8, 14, 'sedmica-2-content');
     generateWeekHTML(15, 21, 'sedmica-3-content');
     generateWeekHTML(22, 28, 'sedmica-4-content');
 
+    // Inicijalizuj checklist nakon što je sadržaj generisan
+    initializeChecklist();
+
     // Inicijalizuj accordion funkcionalnost
     initializeAccordion();
-    // Dodaj debugging informacije u konzolu
+
+    // Debug mode
     if (window.location.hash === '#debug') {
         enableDebugMode();
     }
@@ -32,9 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Debug mode funkcionalnost
 function enableDebugMode() {
-    // Debug mode activated
-    
-    // Dodaj debug panel
     const debugPanel = document.createElement('div');
     debugPanel.id = 'debug-panel';
     debugPanel.style.cssText = `
@@ -49,14 +49,14 @@ function enableDebugMode() {
         z-index: 10000;
         max-width: 300px;
     `;
-    
+
     debugPanel.innerHTML = `
         <strong>🔧 Debug Panel</strong><br>
         <button onclick="testAllFunctions()">Test All Functions</button><br>
         <button onclick="clearAllData()">Clear localStorage</button><br>
         <button onclick="showDataInfo()">Show Data Info</button>
     `;
-    
+
     document.body.appendChild(debugPanel);
 }
 
@@ -75,9 +75,6 @@ function clearAllData() {
 }
 
 function showDataInfo() {
-    // Debug information can be accessed via debug panel
-    
-    // Pokaži localStorage stanje
     let storageData = {};
     for (let i = 1; i <= 28; i++) {
         const key = `checklist_day_${i}`;
@@ -120,22 +117,22 @@ window.debugFunctions = {
 function initializeTodayFocus(currentDay) {
     const dayKey = `Dan ${currentDay}`;
     const todayData = planData[dayKey];
-    
+
     if (!todayData) {
         console.warn(`Nema podataka za ${dayKey}`);
         return;
     }
-    
+
     const todayDate = new Date(startDate);
     todayDate.setDate(startDate.getDate() + currentDay - 1);
-    
+
     const dateElement = document.getElementById('danasnji-datum');
     if (dateElement) {
         dateElement.textContent = `${todayDate.getDate()}.${(todayDate.getMonth() + 1).toString().padStart(2, '0')} | Dan ${currentDay} od 28`;
     }
-    
+
     const container = document.getElementById('danasnji-plan-container');
-    if (container && todayData) {
+    if (container) {
         container.innerHTML = generateDayHTML(todayData, currentDay);
     }
 }
@@ -155,185 +152,7 @@ function generateDayHTML(dayData, dayNumber) {
                     </div>
                 </div>
             </div>
-            
-            <div class="meals-section mb-6">
-                <div class="section-header">
-                    <i class="fas fa-utensils section-icon"></i>
-                    <h4 class="section-title">Obroci (IF 18/6: 11:00-19:00)</h4>
-                </div>
-                
-                <div class="meal-card mb-4">
-                    <h5 class="meal-title">Obrok 1 (oko 11:30)</h5>
-                    <div class="meal-content">
-                        <button class="meal-link" data-meal="obrok1">Alternative</button>
-                        <p class="meal-description">${dayData.obrok1.opis}</p>
-                        <p class="meal-macros">~${dayData.obrok1.macros}</p>
-                    </div>
-                </div>
-                
-                <div class="meal-card">
-                    <h5 class="meal-title">Obrok 2 (oko 16:30)</h5>
-                    <div class="meal-content">
-                        <button class="meal-link" data-meal="obrok2">Alternative</button>
-                        <p class="meal-description">${dayData.obrok2.opis}</p>
-                        <p class="meal-macros">~${dayData.obrok2.macros}</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="supplements-section mb-6">
-                <div class="section-header">
-                    <i class="fas fa-pills section-icon"></i>
-                    <h4 class="section-title">Suplementacija</h4>
-                </div>
-                <div class="supplements-grid">
-                    <div class="supplement-card priority-1">
-                        <span class="supplement-link" data-supplement="Omega-3">Omega-3</span>
-                        <span class="timing">Sa hranom</span>
-                    </div>
-                    <div class="supplement-card priority-2">
-                        <span class="supplement-link" data-supplement="Vitamin D3">Vitamin D3</span>
-                        <span class="timing">Ujutru</span>
-                    </div>
-                    <div class="supplement-card priority-3">
-                        <span class="supplement-link" data-supplement="Magnezijum">Magnezijum</span>
-                        <span class="timing">Uveče</span>
-                    </div>
-                    <div class="supplement-card">
-                        <span class="supplement-link" data-supplement="MCT Oil">MCT Oil</span>
-                        <span class="timing">Ujutru</span>
-                    </div>
-                    <div class="supplement-card">
-                        <span class="supplement-link" data-supplement="Elektroliti">Elektroliti</span>
-                        <span class="timing">Tokom dana</span>
-                    </div>
-                    <div class="supplement-card">
-                        <span class="supplement-link" data-supplement="Kreatin">Kreatin</span>
-                        <span class="timing">Bilo kada</span>
-                    </div>
-                </div>
-            </div>
 
-            <div class="daily-checklist mb-6">
-                <div class="section-header">
-                    <i class="fas fa-list-check section-icon"></i>
-                    <h4 class="section-title">Dnevni checklist</h4>
-                </div>
-                <div class="checklist-container">
-                    <div class="checklist-item" data-task="if-protocol">
-                        <input type="checkbox" id="today-if-protocol" class="checklist-checkbox">
-                        <label for="today-if-protocol" class="checklist-label">Intermittent Fasting 18/6 protokol (11:00-19:00)</label>
-                    </div>
-                    <div class="checklist-item" data-task="calories">
-                        <input type="checkbox" id="today-calories" class="checklist-checkbox">
-                        <label for="today-calories" class="checklist-label">Unos 2250 kcal sa keto makroima</label>
-                    </div>
-                    <div class="checklist-item" data-task="water">
-                        <input type="checkbox" id="today-water" class="checklist-checkbox">
-                        <label for="today-water" class="checklist-label">8 čaša vode (2L minimum)</label>
-                    </div>
-                    <div class="checklist-item" data-task="supplements">
-                        <input type="checkbox" id="today-supplements" class="checklist-checkbox">
-                        <label for="today-supplements" class="checklist-label">Suplementi prema preporuci</label>
-                    </div>
-                    <div class="checklist-item" data-task="exercise">
-                        <input type="checkbox" id="today-exercise" class="checklist-checkbox">
-                        <label for="today-exercise" class="checklist-label">30 minuta šetnje + trening</label>
-                    </div>
-                    <div class="checklist-item" data-task="sleep">
-                        <input type="checkbox" id="today-sleep" class="checklist-checkbox">
-                        <label for="today-sleep" class="checklist-label">Pravilno spavanje (7-8h)</label>
-                    </div>
-                </div>
-                <div class="checklist-progress">
-                    <div class="progress-info">
-                        <span id="checklist-completed">0</span>/<span id="checklist-total">6</span>
-                    </div>
-                    <div class="progress-percentage">
-                        <span id="checklist-percentage">0</span>%
-                    </div>
-                    <div class="progress-message" id="checklist-message">
-                        Počni dan sa prvim zadatkom!
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    return dayHTML;
-}
-
-// Nova funkcija za sedmični pregled - BEZ checklist-a!
-function generateWeekDaySummary(dayData, dayNumber) {
-    let summaryHTML = `
-        <div class="day-content">
-            <div class="training-section mb-6">
-                <div class="section-header">
-                    <i class="fas fa-dumbbell section-icon"></i>
-                    <h4 class="section-title">Trening</h4>
-                </div>
-                <div class="training-card">
-                    <div class="training-type">
-                        <i class="fas fa-dumbbell training-icon"></i>
-                        <span class="training-text">${dayData.trening}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="meals-section mb-6">
-                <div class="section-header">
-                    <i class="fas fa-utensils section-icon"></i>
-                    <h4 class="section-title">Obroci</h4>
-                </div>
-                
-                <div class="meal-card mb-4">
-                    <h5 class="meal-title">Obrok 1</h5>
-                    <div class="meal-content">
-                        <button class="meal-link" data-meal="obrok1">Detalji</button>
-                        <p class="meal-description">${dayData.obrok1.opis}</p>
-                    </div>
-                </div>
-                
-                <div class="meal-card">
-                    <h5 class="meal-title">Obrok 2</h5>
-                    <div class="meal-content">
-                        <button class="meal-link" data-meal="obrok2">Detalji</button>
-                        <p class="meal-description">${dayData.obrok2.opis}</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="supplements-section mb-4">
-                <div class="section-header">
-                    <i class="fas fa-pills section-icon"></i>
-                    <h4 class="section-title">Suplementacija</h4>
-                </div>
-                <div class="supplements-grid">
-                    <div class="supplement-card priority-1">
-                        <span class="supplement-link" data-supplement="Omega-3">Omega-3</span>
-                        <span class="timing">Sa hranom</span>
-                    </div>
-                    <div class="supplement-card priority-2">
-                        <span class="supplement-link" data-supplement="Vitamin D3">Vitamin D3</span>
-                        <span class="timing">Ujutru</span>
-                    </div>
-                    <div class="supplement-card priority-3">
-                        <span class="supplement-link" data-supplement="Magnezijum">Magnezijum</span>
-                        <span class="timing">Uveče</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    return summaryHTML;
-}
-                <div class="training-info">
-                    <i class="fas fa-fire text-orange-400 mr-2"></i>
-                    <span class="font-medium">${dayData.trening}</span>
-                </div>
-            </div>
-            
             <div class="meals-section mb-6">
                 <div class="section-header">
                     <i class="fas fa-utensils section-icon"></i>
@@ -343,7 +162,7 @@ function generateWeekDaySummary(dayData, dayNumber) {
                     ${generateMealsHTML(dayNumber)}
                 </div>
             </div>
-            
+
             <div class="supplements-section mb-6">
                 <div class="section-header">
                     <i class="fas fa-pills section-icon"></i>
@@ -385,12 +204,12 @@ function generateWeekDaySummary(dayData, dayNumber) {
                 <div class="checklist-items" data-day="${dayNumber}">
     `;
 
-    dayData.checklist.forEach((task, index) => {
+    dayData.checklist.forEach(task => {
         const taskId = task.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         dayHTML += `
             <div class="checklist-item">
-                <input type="checkbox" id="${taskId}-${dayNumber}" 
-                       class="checklist-checkbox" 
+                <input type="checkbox" id="${taskId}-${dayNumber}"
+                       class="checklist-checkbox"
                        data-task="${taskId}">
                 <label for="${taskId}-${dayNumber}" class="checklist-label">
                     <span class="checkmark"></span>
@@ -420,22 +239,71 @@ function generateWeekDaySummary(dayData, dayNumber) {
     return dayHTML;
 }
 
+// Nova funkcija za sedmični pregled - BEZ checklist-a
+function generateWeekDaySummary(dayData, dayNumber) {
+    return `
+        <div class="day-content">
+            <div class="training-section mb-6">
+                <div class="section-header">
+                    <i class="fas fa-dumbbell section-icon"></i>
+                    <h4 class="section-title">Trening</h4>
+                </div>
+                <div class="training-card">
+                    <div class="training-type">
+                        <i class="fas fa-dumbbell training-icon"></i>
+                        <span class="training-text">${dayData.trening}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="meals-section mb-6">
+                <div class="section-header">
+                    <i class="fas fa-utensils section-icon"></i>
+                    <h4 class="section-title">Obroci</h4>
+                </div>
+                <div class="meals-grid">
+                    ${generateMealsHTML(dayNumber)}
+                </div>
+            </div>
+
+            <div class="supplements-section mb-6">
+                <div class="section-header">
+                    <i class="fas fa-pills section-icon"></i>
+                    <h4 class="section-title">Suplementacija</h4>
+                </div>
+                <div class="supplements-grid">
+                    <div class="supplement-card priority-1">
+                        <span class="supplement-link" data-supplement="Omega-3">Omega-3</span>
+                        <span class="timing">Sa hranom</span>
+                    </div>
+                    <div class="supplement-card priority-2">
+                        <span class="supplement-link" data-supplement="Vitamin D3">Vitamin D3</span>
+                        <span class="timing">Ujutru</span>
+                    </div>
+                    <div class="supplement-card priority-3">
+                        <span class="supplement-link" data-supplement="Magnezijum">Magnezijum</span>
+                        <span class="timing">Uveče</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function generateWeekHTML(startDay, endDay, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
     let content = '<div class="week-days">';
-    
+
     for (let i = startDay; i <= endDay; i++) {
         const dayKey = `Dan ${i}`;
         const day = planData[dayKey];
         if (!day) continue;
 
-        // Kalkulacija datuma
         const dayDate = new Date(startDate);
         dayDate.setDate(startDate.getDate() + i - 1);
 
-        // Određivanje boja na osnovu tipa dana
         let bgColor, borderColor, typeColor, icon;
         if (day.trening.includes('PUSH')) {
             bgColor = 'bg-orange-900/60 hover:bg-orange-800/70';
@@ -468,13 +336,13 @@ function generateWeekHTML(startDay, endDay, containerId) {
             typeColor = 'text-purple-400';
             icon = 'fa-arrow-down';
         } else {
-            bgColor = 'bg-green-900/60 hover:bg-green-800/70'; 
+            bgColor = 'bg-green-900/60 hover:bg-green-800/70';
             borderColor = 'border-green-600/50';
             typeColor = 'text-green-400';
-            icon = 'fa-dumbbell'; 
+            icon = 'fa-dumbbell';
         }
 
-        const dayDetails = generateDayHTML(day, i);
+        const dayDetails = generateWeekDaySummary(day, i);
 
         content += `
             <div class="day-container border ${borderColor} rounded-lg overflow-hidden transition-all duration-200 hover:shadow-lg">
@@ -516,36 +384,32 @@ function generateWeekHTML(startDay, endDay, containerId) {
             const dayIndex = card.getAttribute('data-day');
             const details = document.getElementById(`details-${dayIndex}`);
             const chevron = document.getElementById(`chevron-${dayIndex}`);
-            
-            // Zatvori sve ostale dane u istom kontejneru
-            document.querySelectorAll(`#${containerId} .day-details`).forEach(otherDetails => {
-                if (otherDetails.id !== `details-${dayIndex}`) {
-                    otherDetails.classList.add('collapsed');
-                    otherDetails.style.maxHeight = '0';
-                    const otherDayIndex = otherDetails.id.replace('details-', '');
-                    const otherChevron = document.getElementById(`chevron-${otherDayIndex}`);
+
+            document.querySelectorAll(`#${containerId} .day-details`).forEach(other => {
+                if (other.id !== `details-${dayIndex}`) {
+                    other.classList.add('collapsed');
+                    other.style.maxHeight = '0';
+                    const otherIndex = other.id.replace('details-', '');
+                    const otherChevron = document.getElementById(`chevron-${otherIndex}`);
                     if (otherChevron) {
                         otherChevron.classList.remove('rotate-180');
                     }
                 }
             });
-            
-            // Toggle trenutni dan
+
             const isCollapsed = details.classList.contains('collapsed');
             details.classList.toggle('collapsed');
             chevron.classList.toggle('rotate-180');
-            
+
             if (isCollapsed) {
-                // Otvara se
                 details.style.maxHeight = details.scrollHeight + 'px';
                 setTimeout(() => {
-                    details.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'nearest' 
+                    details.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
                     });
                 }, 100);
             } else {
-                // Zatvara se
                 details.style.maxHeight = '0';
             }
         });
@@ -557,25 +421,73 @@ function initializeAccordion() {
     const accordionButtons = document.querySelectorAll('.accordion-button');
 
     accordionButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const content = this.nextElementSibling;
             const isOpen = this.classList.contains('open');
 
-            // Zatvori sve accordion sekcije
             accordionButtons.forEach(btn => {
                 btn.classList.remove('open');
                 btn.nextElementSibling.classList.remove('open');
             });
 
-            // Otvori kliknuti ako nije bio aktivan
             if (!isOpen) {
                 this.classList.add('open');
                 content.classList.add('open');
             }
         });
     });
+}
 
-    // Accordion initialized
+function generateMealsHTML(dayNumber) {
+    const meals = [
+        {
+            title: "Obrok 1 (oko 11:30)",
+            description: getMealForDay(dayNumber, 1),
+            macros: "~30-40g proteina, ~25-35g masti, ~8-12g ugljenih hidrata"
+        },
+        {
+            title: "Obrok 2 (oko 16:30)",
+            description: getMealForDay(dayNumber, 2),
+            macros: "~35-45g proteina, ~20-30g masti, ~10-15g ugljenih hidrata"
+        }
+    ];
+
+    return meals.map(meal => `
+        <div class="meal-card">
+            <div class="meal-header">
+                <h5 class="meal-title">${meal.title}</h5>
+                <button class="show-alternatives-btn" data-meal="${meal.title}">
+                    <i class="fas fa-exchange-alt mr-1"></i>
+                    Alternative
+                </button>
+            </div>
+            <div class="meal-content">
+                <p class="meal-description">${meal.description}</p>
+                <div class="macros-info">
+                    <i class="fas fa-chart-pie text-cyan-400 mr-2"></i>
+                    <span class="font-medium">${meal.macros}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function getMealForDay(dayNumber, mealNumber) {
+    const dayIndex = (dayNumber - 1) % 7;
+
+    const mealOptions = {
+        1: [
+            "4 jaja kuvana + ½ avokada + 100g špinat + maslinovo ulje",
+            "150g dimljenog lososa + 2 jaja + miješana salata + limun"
+        ],
+        2: [
+            "200g pečene piletine + 300g brokoli + maslinovo ulje + začini",
+            "220g junećeg mesa + 250g karfiol pire + pavlaka + luk"
+        ]
+    };
+
+    return mealOptions[mealNumber][dayIndex % 2];
 }
 
 console.log('📦 main.js uspešno učitan!');
+

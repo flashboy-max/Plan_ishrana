@@ -838,10 +838,6 @@ body {
     transition: max-height 0.3s ease;
 }
 
-.day-details.hidden {
-    max-height: 0;
-}
-
 /* Responsive adjustments */
 @media (max-width: 640px) {
     .if-countdown {

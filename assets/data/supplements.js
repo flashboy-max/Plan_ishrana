@@ -1,5 +1,29 @@
 // Detalji suplemenata za tooltip sistem
 const detaljiSuplemenata = {
+    "Omega-3": {
+        brend: "Fish Oil",
+        napomene: "EPA+DHA 1-2g/dan. Anti-inflamatorno djelovanje važno za oporavak tetive. Uvijek uz obrok koji sadrži masti."
+    },
+    "Vitamin D3": {
+        brend: "sa K2",
+        napomene: "2000 IU dnevno. Koštano zdravlje i imunitet. K2 usmjerava kalcijum u kosti. Uvijek uz masniji obrok."
+    },
+    "Magnezijum": {
+        brend: "Citrat",
+        napomene: "150-300mg prije spavanja. Relaksacija mišića i bolji san. ROTIRATI sa ZMA - ne uzimati iste noći."
+    },
+    "MCT Oil": {
+        brend: "Caprylic Acid (C8)",
+        napomene: "Započeti sa 1 kašičica → 1 supena kašika. Brza energija u ketozi. Ujutru ili prije aktivnosti. Može uzrokovati probavne smetnje."
+    },
+    "Elektroliti": {
+        brend: "Applied Nutrition Hydration+", 
+        napomene: "⭐ Prioritet #2 za elektrolite i hidrataciju. Sadrži B-vitamine koji podržavaju energijski metabolizam. Tokom/nakon treninga."
+    },
+    "Kreatin": {
+        brend: "CreGAAtine",
+        napomene: "5g dnevno u bilo koje vrijeme. Povećava snagu i mišićnu masu. Piti dosta vode! B-vitamini iz Hydration+ pomažu metabolizam."
+    },
     "Kolagen Peptidi": {
         brend: "Applied Nutrition",
         napomene: "⭐ Prioritet #1 za oporavak tetive. Ključno uzimati sa Vitaminom C za maksimalnu sintezu kolagena. Idealno 30-60 min prije treninga."
@@ -15,18 +39,6 @@ const detaljiSuplemenata = {
     "Vitamin C": {
         brend: "Standardni",
         napomene: "Ključan za sintezu kolagena. PAŽNJA: Flex Pro+ i Hydration+ već sadrže Vitamin C - pratite ukupan unos."
-    },
-    "Kreatin": {
-        brend: "CreGAAtine",
-        napomene: "5g dnevno u bilo koje vrijeme. Povećava snagu i mišićnu masu. Piti dosta vode! B-vitamini iz Hydration+ pomažu metabolizam."
-    },
-    "Omega-3": {
-        brend: "Fish Oil",
-        napomene: "EPA+DHA 1-2g/dan. Anti-inflamatorno djelovanje važno za oporavak tetive. Uvijek uz obrok koji sadrži masti."
-    },
-    "Vitamin D3": {
-        brend: "sa K2",
-        napomene: "2000 IU dnevno. Koštano zdravlje i imunitet. K2 usmjerava kalcijum u kosti. Uvijek uz masniji obrok."
     },
     "Magnezij": {
         brend: "Citrat",

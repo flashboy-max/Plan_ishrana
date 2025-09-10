@@ -1,0 +1,449 @@
+// Glavna JavaScript datoteka - inicijalizacija i konfiguracija
+const startDate = new Date('2025-09-11T00:00:00');
+
+// Globalna inicijalizacija kada se stranica učita
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicijalizuj sve komponente
+    initializeTooltips();
+    initializeModals();
+    initializeChecklist();
+    initializeIFTimer();
+
+    // Ažuriraj progress bar na osnovu trenutnog dana
+    const currentDay = getCurrentDay();
+    updateProgressBar(currentDay);
+
+    // Generisanje današnjeg fokusa
+    initializeTodayFocus(currentDay);
+
+    // Generisanje sedmičnih pregleda
+    generateWeekHTML(1, 7, 'sedmica-1-content');
+    generateWeekHTML(8, 14, 'sedmica-2-content');
+    generateWeekHTML(15, 21, 'sedmica-3-content');
+    generateWeekHTML(22, 28, 'sedmica-4-content');
+
+    // Inicijalizuj accordion funkcionalnost
+    initializeAccordion();
+    // Dodaj debugging informacije u konzolu
+    if (window.location.hash === '#debug') {
+        enableDebugMode();
+    }
+});
+
+// Debug mode funkcionalnost
+function enableDebugMode() {
+    // Debug mode activated
+    
+    // Dodaj debug panel
+    const debugPanel = document.createElement('div');
+    debugPanel.id = 'debug-panel';
+    debugPanel.style.cssText = `
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        z-index: 10000;
+        max-width: 300px;
+    `;
+    
+    debugPanel.innerHTML = `
+        <strong>🔧 Debug Panel</strong><br>
+        <button onclick="testAllFunctions()">Test All Functions</button><br>
+        <button onclick="clearAllData()">Clear localStorage</button><br>
+        <button onclick="showDataInfo()">Show Data Info</button>
+    `;
+    
+    document.body.appendChild(debugPanel);
+}
+
+// Debug funkcije
+function testAllFunctions() {
+    // Test functions can be called individually if needed
+}
+
+function clearAllData() {
+    if (confirm('Da li ste sigurni da želite da obrišete sve sačuvane podatke?')) {
+        for (let i = 1; i <= 28; i++) {
+            localStorage.removeItem(`checklist_day_${i}`);
+        }
+        location.reload();
+    }
+}
+
+function showDataInfo() {
+    // Debug information can be accessed via debug panel
+    
+    // Pokaži localStorage stanje
+    let storageData = {};
+    for (let i = 1; i <= 28; i++) {
+        const key = `checklist_day_${i}`;
+        const data = localStorage.getItem(key);
+        if (data) {
+            storageData[key] = JSON.parse(data);
+        }
+    }
+    console.log('localStorage data:', storageData);
+}
+
+// Utility funkcije
+function formatDate(date) {
+    return date.toLocaleDateString('sr-RS', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function calculateDaysDifference(date1, date2) {
+    const diffTime = Math.abs(date2 - date1);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+}
+
+// Export funkcije za debug ili testiranje
+window.debugFunctions = {
+    testAllFunctions,
+    clearAllData,
+    showDataInfo,
+    getCurrentDay,
+    updateProgressBar,
+    resetIFTimer
+};
+
+// === FUNKCIJE ZA GENERISANJE SADRŽAJA ===
+
+function initializeTodayFocus(currentDay) {
+    const dayKey = `Dan ${currentDay}`;
+    const todayData = planData[dayKey];
+    
+    if (!todayData) {
+        console.warn(`Nema podataka za ${dayKey}`);
+        return;
+    }
+    
+    const todayDate = new Date(startDate);
+    todayDate.setDate(startDate.getDate() + currentDay - 1);
+    
+    const dateElement = document.getElementById('danasnji-datum');
+    if (dateElement) {
+        dateElement.textContent = `${todayDate.getDate()}.${(todayDate.getMonth() + 1).toString().padStart(2, '0')} | Dan ${currentDay} od 28`;
+    }
+    
+    const container = document.getElementById('danasnji-plan-container');
+    if (container && todayData) {
+        container.innerHTML = generateDayHTML(todayData, currentDay);
+    }
+}
+
+function generateDayHTML(dayData, dayNumber) {
+    let dayHTML = `
+        <div class="day-content">
+            <div class="training-section mb-6">
+                <div class="section-header">
+                    <i class="fas fa-dumbbell section-icon"></i>
+                    <h4 class="section-title">Danas trening</h4>
+                </div>
+                <div class="training-info">
+                    <i class="fas fa-fire text-orange-400 mr-2"></i>
+                    <span class="font-medium">${dayData.trening}</span>
+                </div>
+            </div>
+            
+            <div class="meals-section mb-6">
+                <div class="section-header">
+                    <i class="fas fa-utensils section-icon"></i>
+                    <h4 class="section-title">Obroci (IF 18/6: 11:00-19:00)</h4>
+                </div>
+                <div class="meals-grid">
+                    ${generateMealsHTML(dayNumber)}
+                </div>
+            </div>
+            
+            <div class="supplements-section mb-6">
+                <div class="section-header">
+                    <i class="fas fa-pills section-icon"></i>
+                    <h4 class="section-title">Suplementacija</h4>
+                </div>
+                <div class="supplements-grid">
+                    <div class="supplement-card priority-1">
+                        <span class="supplement-link" data-supplement="Omega-3">Omega-3</span>
+                        <span class="timing">Sa hranom</span>
+                    </div>
+                    <div class="supplement-card priority-2">
+                        <span class="supplement-link" data-supplement="Vitamin D3">Vitamin D3</span>
+                        <span class="timing">Ujutru</span>
+                    </div>
+                    <div class="supplement-card priority-3">
+                        <span class="supplement-link" data-supplement="Magnezijum">Magnezijum</span>
+                        <span class="timing">Uveče</span>
+                    </div>
+                    <div class="supplement-card">
+                        <span class="supplement-link" data-supplement="MCT Oil">MCT Oil</span>
+                        <span class="timing">Ujutru</span>
+                    </div>
+                    <div class="supplement-card">
+                        <span class="supplement-link" data-supplement="Elektroliti">Elektroliti</span>
+                        <span class="timing">Tokom dana</span>
+                    </div>
+                    <div class="supplement-card">
+                        <span class="supplement-link" data-supplement="Kreatin">Kreatin</span>
+                        <span class="timing">Bilo kada</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="daily-checklist mb-6">
+                <div class="section-header">
+                    <i class="fas fa-list-check section-icon"></i>
+                    <h4 class="section-title">Dnevni checklist</h4>
+                </div>
+                <div class="checklist-items" data-day="${dayNumber}">
+    `;
+
+    dayData.checklist.forEach((task, index) => {
+        const taskId = task.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+        dayHTML += `
+            <div class="checklist-item">
+                <input type="checkbox" id="${taskId}-${dayNumber}" 
+                       class="checklist-checkbox" 
+                       data-task="${taskId}">
+                <label for="${taskId}-${dayNumber}" class="checklist-label">
+                    <span class="checkmark"></span>
+                    ${task}
+                </label>
+            </div>
+        `;
+    });
+
+    dayHTML += `
+                </div>
+                <div class="checklist-summary mt-4 pt-3 border-t border-gray-700">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-400">
+                            Završeno: <span class="checklist-progress">0/${dayData.checklist.length}</span>
+                        </span>
+                        <span class="text-sm font-medium completion-percentage">0%</span>
+                    </div>
+                    <div class="completion-message text-sm text-cyan-300 mt-2">
+                        Počni dan sa prvim zadatkom!
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return dayHTML;
+}
+
+function generateWeekHTML(startDay, endDay, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let content = '<div class="week-days">';
+    
+    for (let i = startDay; i <= endDay; i++) {
+        const dayKey = `Dan ${i}`;
+        const day = planData[dayKey];
+        if (!day) continue;
+
+        // Kalkulacija datuma
+        const dayDate = new Date(startDate);
+        dayDate.setDate(startDate.getDate() + i - 1);
+
+        // Određivanje boja na osnovu tipa dana
+        let bgColor, borderColor, typeColor, icon;
+        if (day.trening.includes('PUSH')) {
+            bgColor = 'bg-orange-900/60 hover:bg-orange-800/70';
+            borderColor = 'border-orange-600/50';
+            typeColor = 'text-orange-400';
+            icon = 'fa-arrow-up';
+        } else if (day.trening.includes('PULL')) {
+            bgColor = 'bg-blue-900/60 hover:bg-blue-800/70';
+            borderColor = 'border-blue-600/50';
+            typeColor = 'text-blue-400';
+            icon = 'fa-arrow-down';
+        } else if (day.trening.includes('LEGS')) {
+            bgColor = 'bg-red-900/60 hover:bg-red-800/70';
+            borderColor = 'border-red-600/50';
+            typeColor = 'text-red-400';
+            icon = 'fa-shoe-prints';
+        } else if (day.trening.includes('odmor') || day.trening.includes('joga')) {
+            bgColor = 'bg-indigo-900/60 hover:bg-indigo-800/70';
+            borderColor = 'border-indigo-600/50';
+            typeColor = 'text-indigo-400';
+            icon = 'fa-bed';
+        } else if (day.trening.includes('UPPER')) {
+            bgColor = 'bg-yellow-900/60 hover:bg-yellow-800/70';
+            borderColor = 'border-yellow-600/50';
+            typeColor = 'text-yellow-400';
+            icon = 'fa-arrow-up';
+        } else if (day.trening.includes('LOWER')) {
+            bgColor = 'bg-purple-900/60 hover:bg-purple-800/70';
+            borderColor = 'border-purple-600/50';
+            typeColor = 'text-purple-400';
+            icon = 'fa-arrow-down';
+        } else {
+            bgColor = 'bg-green-900/60 hover:bg-green-800/70'; 
+            borderColor = 'border-green-600/50';
+            typeColor = 'text-green-400';
+            icon = 'fa-dumbbell'; 
+        }
+
+        const dayDetails = generateDayHTML(day, i);
+
+        content += `
+            <div class="day-container border ${borderColor} rounded-lg overflow-hidden transition-all duration-200 hover:shadow-lg">
+                <div class="day-card p-4 ${bgColor} cursor-pointer transition-all duration-200" data-day="${i}">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 flex-1 min-w-0">
+                            <div class="flex items-center justify-center w-12 h-12 ${bgColor.replace('/60', '/80').replace('hover:', '')} rounded-lg flex-shrink-0 border ${borderColor}">
+                                <i class="fas ${icon} text-xl ${typeColor}"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-3 mb-1">
+                                    <h3 class="font-bold text-white text-lg">Dan ${i}</h3>
+                                    <span class="text-sm ${typeColor} font-medium">${day.trening.split(' ')[0]}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-400">
+                                    <span class="font-medium">${dayDate.getDate()}.${(dayDate.getMonth() + 1).toString().padStart(2, '0')}</span>
+                                    <span>•</span>
+                                    <span class="capitalize">${dayDate.toLocaleDateString('sr-RS', { weekday: 'short' })}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down transition-transform duration-300 text-gray-400 text-lg flex-shrink-0 ml-4" id="chevron-${i}"></i>
+                    </div>
+                </div>
+                <div class="day-details hidden overflow-hidden" id="details-${i}">
+                    <div class="p-4 sm:p-6 bg-gray-900/30 max-w-full overflow-x-auto">
+                        ${dayDetails}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    content += '</div>';
+    container.innerHTML = content;
+
+    // Add event listeners for expand/collapse
+    document.querySelectorAll(`#${containerId} .day-card`).forEach(card => {
+        card.addEventListener('click', () => {
+            const dayIndex = card.getAttribute('data-day');
+            const details = document.getElementById(`details-${dayIndex}`);
+            const chevron = document.getElementById(`chevron-${dayIndex}`);
+            
+            // Zatvori sve ostale dane u istom kontejneru
+            document.querySelectorAll(`#${containerId} .day-details`).forEach(otherDetails => {
+                if (otherDetails.id !== `details-${dayIndex}`) {
+                    otherDetails.classList.add('hidden');
+                    const otherDayIndex = otherDetails.id.replace('details-', '');
+                    const otherChevron = document.getElementById(`chevron-${otherDayIndex}`);
+                    if (otherChevron) {
+                        otherChevron.classList.remove('rotate-180');
+                    }
+                }
+            });
+            
+            // Toggle trenutni dan
+            const isOpening = details.classList.contains('hidden');
+            details.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+            
+            // Ako se dan otvara, scroll do njega nakon kratke pauze
+            if (isOpening) {
+                setTimeout(() => {
+                    details.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest' 
+                    });
+                }, 100);
+            }
+        });
+    });
+}
+
+// Accordion funkcionalnost
+function initializeAccordion() {
+    const accordionButtons = document.querySelectorAll('.accordion-button');
+
+    accordionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const content = this.nextElementSibling;
+            const isOpen = this.classList.contains('open');
+
+            // Zatvori sve accordion sekcije
+            accordionButtons.forEach(btn => {
+                btn.classList.remove('open');
+                btn.nextElementSibling.classList.remove('open');
+            });
+
+            // Otvori kliknuti ako nije bio aktivan
+            if (!isOpen) {
+                this.classList.add('open');
+                content.classList.add('open');
+            }
+        });
+    });
+
+    // Accordion initialized
+}
+
+function generateMealsHTML(dayNumber) {
+    // Generiši različite obroke na osnovu dana u sedmici
+    const meals = [
+        {
+            title: "Obrok 1 (oko 11:30)",
+            description: getMealForDay(dayNumber, 1),
+            macros: "~30-40g proteina, ~25-35g masti, ~8-12g ugljenih hidrata"
+        },
+        {
+            title: "Obrok 2 (oko 16:30)",
+            description: getMealForDay(dayNumber, 2),
+            macros: "~35-45g proteina, ~20-30g masti, ~10-15g ugljenih hidrata"
+        }
+    ];
+
+    return meals.map(meal => `
+        <div class="meal-card">
+            <div class="meal-header">
+                <h5 class="meal-title">${meal.title}</h5>
+                <button class="show-alternatives-btn" data-meal="${meal.title}">
+                    <i class="fas fa-exchange-alt mr-1"></i>
+                    Alternative
+                </button>
+            </div>
+            <div class="meal-content">
+                <p class="meal-description">${meal.description}</p>
+                <div class="macros-info">
+                    <i class="fas fa-chart-pie text-cyan-400 mr-2"></i>
+                    <span class="font-medium">${meal.macros}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function getMealForDay(dayNumber, mealNumber) {
+    // Rotiraj obroke na osnovu dana
+    const dayIndex = (dayNumber - 1) % 7;
+
+    const mealOptions = {
+        1: [
+            "4 jaja kuvana + ½ avokada + 100g špinat + maslinovo ulje",
+            "150g dimljenog lososa + 2 jaja + miješana salata + limun"
+        ],
+        2: [
+            "200g pečene piletine + 300g brokoli + maslinovo ulje + začini",
+            "220g junećeg mesa + 250g karfiol pire + pavlaka + luk"
+        ]
+    };
+
+    return mealOptions[mealNumber][dayIndex % 2];
+}
+
+// Main.js loaded successfully

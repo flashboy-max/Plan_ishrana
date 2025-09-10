@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aleksandrov 28-dnevni Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="p-2 sm:p-4 lg:p-8">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header Sekcija -->
+        <header class="text-center mb-8 sm:mb-12">
+            <div class="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 shadow-2xl">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
+                    Aleksandrov Plan Transformacije
+                </h1>
+                <p class="text-lg sm:text-xl lg:text-2xl text-cyan-100 font-medium">
+                    28-dnevni Keto & Trening Protokol
+                </p>
+                <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-sm sm:text-base text-cyan-100">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-calendar-alt text-cyan-300"></i>
+                        <span>Start: 11.09.2025</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-target text-cyan-300"></i>
+                        <span>Cilj: -4kg</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-heartbeat text-cyan-300"></i>
+                        <span>Rehab: Rame</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar Sekcija -->
+        <div class="progress-container">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-semibold text-white flex items-center">
+                    <i class="fas fa-chart-line mr-3 text-cyan-400"></i>Napredak Transformacije
+                </h3>
+                <div class="text-cyan-300 font-bold" id="progress-percentage">0%</div>
+            </div>
+            
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <span class="progress-stat-value" id="current-day">1</span>
+                    <span class="progress-stat-label">Trenutni Dan</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="progress-stat-value" id="days-remaining">28</span>
+                    <span class="progress-stat-label">Preostalo Dana</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="progress-stat-value" id="weeks-completed">0</span>
+                    <span class="progress-stat-label">Završenih Sedmica</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="progress-stat-value" id="days-elapsed">0</span>
+                    <span class="progress-stat-label">Prošlih Dana</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- IF Timer Sekcija -->
+        <div class="card mb-6 sm:mb-8" id="if-timer-container">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-white flex items-center">
+                    <i class="fas fa-clock mr-3 text-purple-400"></i>IF Timer (18/6 Protokol)
+                </h3>
+                <div class="if-status-badge" id="if-status-badge">
+                    <i class="fas fa-circle if-status-icon" id="if-status-icon"></i>
+                    <span id="if-status-text">Učitavanje...</span>
+                </div>
+            </div>
+            
+            <div class="if-timer-display">
+                <div class="if-phase-info mb-4">
+                    <div class="if-phase-title" id="if-phase-title">Trenutna Faza</div>
+                    <div class="if-countdown" id="if-countdown">--:--:--</div>
+                    <div class="if-next-phase" id="if-next-phase">Do sledeće faze</div>
+                </div>
+                
+                <div class="if-progress-wrapper">
+                    <div class="if-progress-bar">
+                        <div class="if-progress-fill" id="if-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="if-progress-labels">
+                        <span class="if-time-label">19:00</span>
+                        <span class="if-time-label">13:00</span>
+                    </div>
+                </div>
+                
+                <div class="if-schedule mt-4">
+                    <div class="if-window eating">
+                        <i class="fas fa-utensils"></i>
+                        <span><strong>Eating Window:</strong> 11:00 - 19:00 (8h)</span>
+                    </div>
+                    <div class="if-window fasting">
+                        <i class="fas fa-moon"></i>
+                        <span><strong>Fasting Period:</strong> 19:00 - 11:00 (16h)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profil i Ciljevi -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8 items-start">
+            <div class="card h-fit">
+                <h2 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center"><i class="fas fa-user mr-3 text-cyan-400"></i>Profil</h2>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div><strong>Godine:</strong> <span id="info-godine">41</span></div>
+                    <div><strong>Visina:</strong> <span id="info-visina">181 cm</span></div>
+                    <div><strong>Početna težina:</strong> <span id="info-tezina">100 kg</span></div>
+                    <div><strong>Početak plana:</strong> <span id="info-pocetak">11.09.2025.</span></div>
+                </div>
+            </div>
+            <div class="card h-fit">
+                <h2 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center"><i class="fas fa-bullseye mr-3 text-cyan-400"></i>Ključni Ciljevi (28 dana)</h2>
+                <ul class="list-disc list-inside space-y-2 text-sm">
+                    <li>Smanjenje tjelesne težine za <strong>3.0 - 4.0 kg</strong></li>
+                    <li>Oporavak od tendinitisa (bol u ramenu ≤ 3/10)</li>
+                    <li>Prosječno <strong>≥ 8.000 koraka</strong> dnevno</li>
+                    <li>Uspostavljanje rutine treninga i ishrane</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Inventar Suplemenata (Collapsible) -->
+        <div class="card mb-6 sm:mb-8">
+            <button class="supplement-toggle w-full flex justify-between items-center text-left text-lg sm:text-xl font-semibold text-white mb-4 hover:text-cyan-400 transition-colors">
+                <span class="flex items-center"><i class="fas fa-capsules mr-3 text-cyan-400"></i>Inventar Suplemenata & Preporučene Doze</span>
+                <i class="fas fa-chevron-down transition-transform duration-300" id="supplement-chevron"></i>
+            </button>
+            <div id="supplement-inventory" class="hidden space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Prioritetni suplementi -->
+                    <div class="p-4 bg-cyan-900/30 border border-cyan-600/50 rounded-lg">
+                        <h4 class="font-bold text-cyan-300 mb-2 flex items-center"><i class="fas fa-star mr-2"></i>Kolagen Peptidi</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Brend:</strong> Applied Nutrition</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> 10g dnevno</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> 30-60 min prije treninga</p>
+                        <p class="text-xs text-gray-400">Prioritet #1 za oporavak tetive. Uzimati sa Vitaminom C.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-cyan-900/30 border border-cyan-600/50 rounded-lg">
+                        <h4 class="font-bold text-cyan-300 mb-2 flex items-center"><i class="fas fa-star mr-2"></i>Hydration+</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Brend:</strong> Applied Nutrition</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> 1 kesica u 500ml vode</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> Tokom/nakon treninga</p>
+                        <p class="text-xs text-gray-400">Prioritet #2 za elektrolite. Sadrži i B-vitamine.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-cyan-900/30 border border-cyan-600/50 rounded-lg">
+                        <h4 class="font-bold text-cyan-300 mb-2 flex items-center"><i class="fas fa-star mr-2"></i>Flex Pro+</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Brend:</strong> Muscle Freak</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> 1 doza dnevno</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> Uz obrok</p>
+                        <p class="text-xs text-gray-400">Prioritet #3. Sveobuhvatna podrška za zglobove, sadrži kurkumin.</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Standardni suplementi -->
+                    <div class="p-4 bg-gray-800/50 border border-gray-600 rounded-lg">
+                        <h4 class="font-bold text-white mb-2">Kreatin (CreGAAtine)</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> 5g dnevno</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> Bilo kada</p>
+                        <p class="text-xs text-gray-400">Piti dosta vode. B-kompleks iz Hydration+ podržava metabolizam.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-800/50 border border-gray-600 rounded-lg">
+                        <h4 class="font-bold text-white mb-2">Omega-3 (Fish Oil)</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> EPA+DHA 1-2g/dan</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> Uz obrok</p>
+                        <p class="text-xs text-gray-400">Anti-inflamatorno; važno za tetivu.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-800/50 border border-gray-600 rounded-lg">
+                        <h4 class="font-bold text-white mb-2">Vitamin D3 + K2</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> 2000 IU D3</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> Prvi, masniji obrok</p>
+                        <p class="text-xs text-gray-400">Koštano zdravlje i imunitet.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-800/50 border border-gray-600 rounded-lg">
+                        <h4 class="font-bold text-white mb-2">Vitamin C</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> 500mg</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> Zajedno sa kolagenom</p>
+                        <p class="text-xs text-gray-400">Oprez: Flex Pro+ i Hydration+ takođe sadrže Vitamin C.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-800/50 border border-gray-600 rounded-lg">
+                        <h4 class="font-bold text-white mb-2">Magnezij</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> 150-300mg</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> 1h prije spavanja</p>
+                        <p class="text-xs text-gray-400">Rotirati sa ZMA. Ne kombinovati sa ZMA iste noći.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-800/50 border border-gray-600 rounded-lg">
+                        <h4 class="font-bold text-white mb-2">ZMA Pro</h4>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Doza:</strong> Prema etiketi</p>
+                        <p class="text-sm text-gray-300 mb-2"><strong>Vrijeme:</strong> 30-60 min prije spavanja</p>
+                        <p class="text-xs text-gray-400">Rotirati sa Magnezij. Prazan stomak.</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Opcioni suplementi -->
+                    <div class="p-4 bg-gray-700/30 border border-gray-500 rounded-lg opacity-75">
+                        <h4 class="font-bold text-gray-300 mb-2">Whey Protein Isolate</h4>
+                        <p class="text-sm text-gray-400 mb-2"><strong>Doza:</strong> 1 mjerica po potrebi</p>
+                        <p class="text-sm text-gray-400 mb-2"><strong>Vrijeme:</strong> Nakon treninga</p>
+                        <p class="text-xs text-gray-500">Praktičan izvor proteina.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-700/30 border border-gray-500 rounded-lg opacity-75">
+                        <h4 class="font-bold text-gray-300 mb-2">Ashwagandha</h4>
+                        <p class="text-sm text-gray-400 mb-2"><strong>Doza:</strong> 300-600mg</p>
+                        <p class="text-sm text-gray-400 mb-2"><strong>Vrijeme:</strong> Uveče</p>
+                        <p class="text-xs text-gray-500">Opciono za stres/san.</p>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-700/30 border border-gray-500 rounded-lg opacity-75">
+                        <h4 class="font-bold text-gray-300 mb-2">MCT C8</h4>
+                        <p class="text-sm text-gray-400 mb-2"><strong>Doza:</strong> 1 kašičica → 1 sup. kašika</p>
+                        <p class="text-sm text-gray-400 mb-2"><strong>Vrijeme:</strong> Ujutro/pre aktivnosti</p>
+                        <p class="text-xs text-gray-500">Opciono za energiju.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-amber-900/20 border border-amber-600/50 rounded-lg">
+                    <h4 class="font-bold text-amber-300 mb-2 flex items-center"><i class="fas fa-exclamation-triangle mr-2"></i>Važne Napomene</h4>
+                    <ul class="text-sm text-amber-200 space-y-1">
+                        <li>• Pošto Hydration+ i Flex Pro+ sadrže Vitamin C i Magnezij, pratite ukupan dnevni unos</li>
+                        <li>• Rotirajte ZMA i solo magnezij kako je planirano</li>
+                        <li>• Pratite reakciju tijela i prilagodite doze po potrebi</li>
+                        <li>• Uvijek uzimajte suplemente uz dovoljno vode</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Današnji Fokus -->
+        <div class="card mb-6 sm:mb-8">
+            <div class="text-center mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-center">
+                    <i class="fas fa-calendar-day mr-3 text-cyan-400"></i>Današnji Fokus
+                </h2>
+                <div class="text-lg text-cyan-300 font-semibold" id="danasnji-datum">
+                    <!-- Datum se dinamički ubacuje ovdje -->
+                </div>
+            </div>
+            <div id="danasnji-plan-container" class="space-y-6">
+                <!-- Sadržaj se dinamički ubacuje ovdje -->
+            </div>
+        </div>
+
+        <!-- Sedmični Pregled (Accordion) -->
+        <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 text-center flex items-center justify-center">
+                <i class="fas fa-calendar-week mr-3 text-cyan-400"></i>Sedmični Pregled Plana
+            </h2>
+            <div class="space-y-4">
+                <!-- Sedmica 1 -->
+                <div class="card border border-gray-600 hover:border-cyan-500/50 transition-all duration-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left text-lg font-semibold text-white p-4 -m-6 rounded-t-lg hover:bg-gray-700/30 transition-all duration-200">
+                        <span class="flex items-center">
+                            <i class="fas fa-folder-open mr-3 text-cyan-400"></i>
+                            <span class="text-white">Sedmica 1</span>
+                            <span class="text-gray-400 ml-2 font-normal">(Dan 1-7)</span>
+                        </span>
+                        <i class="fas fa-chevron-down accordion-icon transition-transform duration-300 text-gray-400"></i>
+                    </button>
+                    <div id="sedmica-1-content" class="accordion-content">
+                        <!-- Sadržaj se dinamički ubacuje ovdje -->
+                    </div>
+                </div>
+                <!-- Sedmica 2 -->
+                <div class="card border border-gray-600 hover:border-cyan-500/50 transition-all duration-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left text-lg font-semibold text-white p-4 -m-6 rounded-t-lg hover:bg-gray-700/30 transition-all duration-200">
+                        <span class="flex items-center">
+                            <i class="fas fa-folder-open mr-3 text-cyan-400"></i>
+                            <span class="text-white">Sedmica 2</span>
+                            <span class="text-gray-400 ml-2 font-normal">(Dan 8-14)</span>
+                        </span>
+                        <i class="fas fa-chevron-down accordion-icon transition-transform duration-300 text-gray-400"></i>
+                    </button>
+                    <div id="sedmica-2-content" class="accordion-content">
+                         <!-- Sadržaj se dinamički ubacuje ovdje -->
+                    </div>
+                </div>
+                <!-- Sedmica 3 -->
+                <div class="card border border-gray-600 hover:border-cyan-500/50 transition-all duration-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left text-lg font-semibold text-white p-4 -m-6 rounded-t-lg hover:bg-gray-700/30 transition-all duration-200">
+                        <span class="flex items-center">
+                            <i class="fas fa-folder-open mr-3 text-cyan-400"></i>
+                            <span class="text-white">Sedmica 3</span>
+                            <span class="text-gray-400 ml-2 font-normal">(Dan 15-21)</span>
+                        </span>
+                        <i class="fas fa-chevron-down accordion-icon transition-transform duration-300 text-gray-400"></i>
+                    </button>
+                    <div id="sedmica-3-content" class="accordion-content">
+                         <!-- Sadržaj se dinamički ubacuje ovdje -->
+                    </div>
+                </div>
+                <!-- Sedmica 4 -->
+                <div class="card border border-gray-600 hover:border-cyan-500/50 transition-all duration-200">
+                    <button class="accordion-button w-full flex justify-between items-center text-left text-lg font-semibold text-white p-4 -m-6 rounded-t-lg hover:bg-gray-700/30 transition-all duration-200">
+                        <span class="flex items-center">
+                            <i class="fas fa-folder-open mr-3 text-cyan-400"></i>
+                            <span class="text-white">Sedmica 4</span>
+                            <span class="text-gray-400 ml-2 font-normal">(Dan 22-28)</span>
+                        </span>
+                        <i class="fas fa-chevron-down accordion-icon transition-transform duration-300 text-gray-400"></i>
+                    </button>
+                    <div id="sedmica-4-content" class="accordion-content">
+                         <!-- Sadržaj se dinamički ubacuje ovdje -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Završne Napomene -->
+        <footer class="card mt-6 sm:mt-8 text-center">
+            <h2 class="text-lg sm:text-xl font-semibold text-white mb-4">Važne Napomene</h2>
+            <p class="text-sm text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                Pratite bol u ramenu (skala 0-10) i ne prelazite 2-3/10 tokom vježbi. Ako bol raste, smanjite opterećenje. Hidratacija i elektroliti su ključni. Slušajte svoje tijelo.
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- Tooltip Element -->
+    <div id="tooltip" class="hidden">
+        <div class="tooltip-title"></div>
+        <div class="tooltip-brand"></div>
+        <div class="tooltip-notes"></div>
+    </div>
+
+    <!-- Alternative Meals Modal -->
+    <div id="alternativeModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-utensils mr-3 text-cyan-400"></i>
+                    <span id="modalTitle">Alternativni Obroci</span>
+                </h3>
+                <button class="modal-close" onclick="closeAlternativeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modalMeals" class="space-y-4">
+                <!-- Sadržaj se dinamički ubacuje ovdje -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Data Files -->
+    <script src="assets/data/supplements.js"></script>
+    <script src="assets/data/meals.js"></script>
+    <script src="assets/data/planData.js"></script>
+    
+    <!-- Load JavaScript Modules -->
+    <script src="assets/js/tooltip.js"></script>
+    <script src="assets/js/modal.js"></script>
+    <script src="assets/js/progress.js"></script>
+    <script src="assets/js/checklist.js"></script>
+    <script src="assets/js/ifTimer.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+</html>

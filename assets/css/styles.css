@@ -384,9 +384,10 @@ body {
     display: flex;
     align-items: center;
     color: #d1d5db;
+    gap: 0.75rem;
 }
 
-.checklist-checkbox:checked + .checklist-label {
+.checklist-checkbox:checked ~ .task-text {
     text-decoration: line-through;
     color: #9ca3af;
 }
@@ -762,56 +763,39 @@ body {
     background: rgba(234, 179, 8, 0.1) !important;
 }
 
-.checkmark {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #374151;
-    border-radius: 3px;
-    margin-right: 0.5rem;
-    position: relative;
-    transition: all 0.2s ease;
-}
-
-.checklist-checkbox:checked + .checklist-label .checkmark::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #06b6d4;
-    font-size: 12px;
-    font-weight: bold;
-}
-
 /* Week Days Container */
 .week-days {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.75rem;
+    padding: 0.5rem;
 }
 
 @media (min-width: 640px) {
     .week-days {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
 }
 
 @media (min-width: 768px) {
     .week-days {
         grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
     }
 }
 
 @media (min-width: 1024px) {
     .week-days {
         grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
     }
 }
 
 @media (min-width: 1280px) {
     .week-days {
         grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
     }
 }
 
@@ -820,6 +804,9 @@ body {
     border-radius: 0.5rem;
     overflow: hidden;
     transition: all 0.2s ease;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
 }
 
 .day-container:hover {

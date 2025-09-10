@@ -11,6 +11,22 @@ function initializeChecklist() {
     loadChecklistState();
 }
 
+// Nova funkcija za inicijalizaciju samo današnjeg checklist-a
+function initializeTodayChecklist(currentDay) {
+    // Učitaj samo stanje za današnji dan
+    loadTodayChecklistState(currentDay);
+    
+    // Setup event listener samo za današnji dan
+    const todayChecklistContainer = document.querySelector('#danasnji-plan-container .checklist-items');
+    if (todayChecklistContainer) {
+        todayChecklistContainer.addEventListener('change', function(e) {
+            if (e.target.classList.contains('checklist-checkbox')) {
+                handleCheckboxChange(e.target);
+            }
+        });
+    }
+}
+
 function handleCheckboxChange(checkbox) {
     const checklistContainer = checkbox.closest('.checklist-items');
     const dayNumber = checklistContainer.getAttribute('data-day');
@@ -86,4 +102,24 @@ function loadChecklistState() {
         // Ažuriraj progress
         updateChecklistProgress(checklistContainer);
     });
+}
+
+// Nova funkcija za učitavanje stanja samo današnjeg dana
+function loadTodayChecklistState(currentDay) {
+    const todayContainer = document.querySelector('#danasnji-plan-container .checklist-items');
+    if (!todayContainer) return;
+    
+    const storageKey = `checklist_day_${currentDay}`;
+    const dayData = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    
+    // Postavi stanje checkbox-a
+    todayContainer.querySelectorAll('.checklist-checkbox').forEach(checkbox => {
+        const taskId = checkbox.dataset.task;
+        if (dayData[taskId] !== undefined) {
+            checkbox.checked = dayData[taskId];
+        }
+    });
+    
+    // Ažuriraj progress
+    updateChecklistProgress(todayContainer);
 }

@@ -4,7 +4,6 @@ const startDate = new Date('2025-09-11T00:00:00');
 // Globalna inicijalizacija kada se stranica učita
 document.addEventListener('DOMContentLoaded', function () {
     // Inicijalizuj osnovne komponente
-    initializeTooltips();
     initializeModals();
     initializeIFTimer();
 
@@ -21,11 +20,14 @@ document.addEventListener('DOMContentLoaded', function () {
     generateWeekHTML(15, 21, 'sedmica-3-content');
     generateWeekHTML(22, 28, 'sedmica-4-content');
 
-    // Inicijalizuj checklist nakon što je sadržaj generisan
-    initializeChecklist();
+    // Inicijalizuj checklist samo za danas (ne za sedmične preglede)
+    initializeTodayChecklist(currentDay);
 
     // Inicijalizuj accordion funkcionalnost
     initializeAccordion();
+
+    // Inicijalizuj tooltips NAKON što je sadržaj generisan
+    initializeTooltips();
 
     // Debug mode
     if (window.location.hash === '#debug') {
@@ -208,12 +210,11 @@ function generateDayHTML(dayData, dayNumber) {
         const taskId = task.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         dayHTML += `
             <div class="checklist-item">
-                <input type="checkbox" id="${taskId}-${dayNumber}"
-                       class="checklist-checkbox"
-                       data-task="${taskId}">
                 <label for="${taskId}-${dayNumber}" class="checklist-label">
-                    <span class="checkmark"></span>
-                    ${task}
+                    <input type="checkbox" id="${taskId}-${dayNumber}"
+                           class="checklist-checkbox"
+                           data-task="${taskId}">
+                    <span class="task-text">${task}</span>
                 </label>
             </div>
         `;
@@ -294,9 +295,13 @@ function generateWeekHTML(startDay, endDay, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    const currentDay = getCurrentDay(); // Dobij trenutni dan
     let content = '<div class="week-days">';
 
     for (let i = startDay; i <= endDay; i++) {
+        // Preskoči trenutni dan jer se prikazuje u "Današnji fokus" sekciji
+        if (i === currentDay) continue;
+        
         const dayKey = `Dan ${i}`;
         const day = planData[dayKey];
         if (!day) continue;

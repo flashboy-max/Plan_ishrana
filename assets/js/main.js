@@ -499,7 +499,7 @@ function generateWeekHTML(startDay, endDay, containerId) {
                         <i class="fas fa-chevron-down transition-transform duration-300 text-gray-400 text-lg flex-shrink-0 ml-4" id="chevron-${i}"></i>
                     </div>
                 </div>
-                <div class="day-details hidden overflow-hidden" id="details-${i}">
+                <div class="day-details collapsed max-h-0 overflow-hidden transition-all duration-300 ease-in-out" id="details-${i}">
                     <div class="p-4 sm:p-6 bg-gray-900/30 max-w-full overflow-x-auto">
                         ${dayDetails}
                     </div>
@@ -520,7 +520,8 @@ function generateWeekHTML(startDay, endDay, containerId) {
             // Zatvori sve ostale dane u istom kontejneru
             document.querySelectorAll(`#${containerId} .day-details`).forEach(otherDetails => {
                 if (otherDetails.id !== `details-${dayIndex}`) {
-                    otherDetails.classList.add('hidden');
+                    otherDetails.classList.add('collapsed');
+                    otherDetails.style.maxHeight = '0';
                     const otherDayIndex = otherDetails.id.replace('details-', '');
                     const otherChevron = document.getElementById(`chevron-${otherDayIndex}`);
                     if (otherChevron) {
@@ -530,18 +531,22 @@ function generateWeekHTML(startDay, endDay, containerId) {
             });
             
             // Toggle trenutni dan
-            const isOpening = details.classList.contains('hidden');
-            details.classList.toggle('hidden');
+            const isCollapsed = details.classList.contains('collapsed');
+            details.classList.toggle('collapsed');
             chevron.classList.toggle('rotate-180');
             
-            // Ako se dan otvara, scroll do njega nakon kratke pauze
-            if (isOpening) {
+            if (isCollapsed) {
+                // Otvara se
+                details.style.maxHeight = details.scrollHeight + 'px';
                 setTimeout(() => {
                     details.scrollIntoView({ 
                         behavior: 'smooth', 
                         block: 'nearest' 
                     });
                 }, 100);
+            } else {
+                // Zatvara se
+                details.style.maxHeight = '0';
             }
         });
     });
@@ -573,57 +578,4 @@ function initializeAccordion() {
     // Accordion initialized
 }
 
-function generateMealsHTML(dayNumber) {
-    // Generiši različite obroke na osnovu dana u sedmici
-    const meals = [
-        {
-            title: "Obrok 1 (oko 11:30)",
-            description: getMealForDay(dayNumber, 1),
-            macros: "~30-40g proteina, ~25-35g masti, ~8-12g ugljenih hidrata"
-        },
-        {
-            title: "Obrok 2 (oko 16:30)",
-            description: getMealForDay(dayNumber, 2),
-            macros: "~35-45g proteina, ~20-30g masti, ~10-15g ugljenih hidrata"
-        }
-    ];
-
-    return meals.map(meal => `
-        <div class="meal-card">
-            <div class="meal-header">
-                <h5 class="meal-title">${meal.title}</h5>
-                <button class="show-alternatives-btn" data-meal="${meal.title}">
-                    <i class="fas fa-exchange-alt mr-1"></i>
-                    Alternative
-                </button>
-            </div>
-            <div class="meal-content">
-                <p class="meal-description">${meal.description}</p>
-                <div class="macros-info">
-                    <i class="fas fa-chart-pie text-cyan-400 mr-2"></i>
-                    <span class="font-medium">${meal.macros}</span>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-function getMealForDay(dayNumber, mealNumber) {
-    // Rotiraj obroke na osnovu dana
-    const dayIndex = (dayNumber - 1) % 7;
-
-    const mealOptions = {
-        1: [
-            "4 jaja kuvana + ½ avokada + 100g špinat + maslinovo ulje",
-            "150g dimljenog lososa + 2 jaja + miješana salata + limun"
-        ],
-        2: [
-            "200g pečene piletine + 300g brokoli + maslinovo ulje + začini",
-            "220g junećeg mesa + 250g karfiol pire + pavlaka + luk"
-        ]
-    };
-
-    return mealOptions[mealNumber][dayIndex % 2];
-}
-
-// Main.js loaded successfully
+console.log('📦 main.js uspešno učitan!');

@@ -217,17 +217,19 @@ function initializeGlobalTooltips() {
 
     // Mouseenter sa debouncing
     document.addEventListener('mouseenter', function(e) {
-        if (e.target.classList.contains('tooltip-trigger')) {
+        const target = e.target.closest('.tooltip-trigger');
+        if (target && target.classList && target.classList.contains('tooltip-trigger')) {
             clearTimeout(tooltipTimeout);
             tooltipTimeout = setTimeout(() => {
-                showGlobalTooltip(e.target);
+                showGlobalTooltip(target);
             }, 100);
         }
     }, true);
 
     // Mouseleave sa delay
     document.addEventListener('mouseleave', function(e) {
-        if (e.target.classList.contains('tooltip-trigger')) {
+        const target = e.target.closest('.tooltip-trigger');
+        if (target && target.classList && target.classList.contains('tooltip-trigger')) {
             clearTimeout(tooltipTimeout);
             tooltipTimeout = setTimeout(() => {
                 hideGlobalTooltip();
@@ -237,7 +239,8 @@ function initializeGlobalTooltips() {
 
     // Click-outside za tooltip
     document.addEventListener('click', function(e) {
-        if (currentTooltip && !currentTooltip.contains(e.target) && !e.target.classList.contains('tooltip-trigger')) {
+        if (currentTooltip && e.target && e.target.nodeType === 1 && !currentTooltip.contains(e.target) && 
+            (!e.target.classList || !e.target.classList.contains('tooltip-trigger'))) {
             hideGlobalTooltip();
         }
     });
@@ -266,38 +269,38 @@ function initializeGlobalTooltips() {
             `;
         }
 
-        // Pozicioniranje sa viewport bounds checking
-        const rect = trigger.getBoundingClientRect();
-        const scrollTop = window.pageYOffset;
-        const scrollLeft = window.pageXOffset;
+    // Pozicioniranje sa viewport bounds checking
+    const rect = trigger.getBoundingClientRect();
 
-        // Temporary show za tačne dimenzije
-        tooltip.style.visibility = 'hidden';
-        tooltip.style.display = 'block';
-        tooltip.classList.remove('hidden');
+    // Temporary show za tačne dimenzije
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.display = 'block';
+    tooltip.classList.remove('hidden');
 
-        const tooltipRect = tooltip.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
 
-        // Kalkulacija pozicije
-        let top = rect.bottom + scrollTop + 8;
-        let left = rect.left + scrollLeft + (rect.width / 2) - (tooltipRect.width / 2);
+    // Kalkulacija pozicije - koristi samo viewport koordinate za position: fixed
+    let top = rect.bottom + 8;
+    let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
 
-        // Horizontalno pozicioniranje
-        const padding = 15;
-        if (left < padding) {
-            left = padding;
-        } else if (left + tooltipRect.width > viewportWidth - padding) {
-            left = viewportWidth - tooltipRect.width - padding;
+    // Horizontalno pozicioniranje sa padding-om
+    const padding = 15;
+    if (left < padding) {
+        left = padding;
+    } else if (left + tooltipRect.width > viewportWidth - padding) {
+        left = viewportWidth - tooltipRect.width - padding;
+    }
+
+    // Vertikalno pozicioniranje - ako izlazi van viewport-a, prikaži iznad
+    if (top + tooltipRect.height > viewportHeight - padding) {
+        top = rect.top - tooltipRect.height - 8;
+        // Dodatna provjera da ne ide iznad viewport-a
+        if (top < padding) {
+            top = padding;
         }
-
-        // Vertikalno pozicioniranje - ako izlazi van viewport-a, prikaži iznad
-        if (top + tooltipRect.height > viewportHeight + scrollTop - padding) {
-            top = rect.top + scrollTop - tooltipRect.height - 8;
-        }
-
-        // Konačno pozicioniranje
+    }        // Konačno pozicioniranje
         tooltip.style.position = 'fixed';
         tooltip.style.top = Math.round(top) + 'px';
         tooltip.style.left = Math.round(left) + 'px';

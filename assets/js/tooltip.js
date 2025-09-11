@@ -1,18 +1,10 @@
-// Tooltip funkcionalnost za suplemente
+// Tooltip funkcionalnost za suplemente - ISKLJUČENO
+// Prelazimo na Advanced Supplement Manager tooltip sistem
 function initializeTooltips() {
-    // Event delegation za hover na supplement linkove
-    document.addEventListener('mouseenter', function(e) {
-        if (e.target && e.target.classList && e.target.classList.contains('supplement-link')) {
-            e.preventDefault();
-            showTooltip(e.target, e.target.dataset.supplement);
-        }
-    }, true);
-
-    document.addEventListener('mouseleave', function(e) {
-        if (e.target && e.target.classList && e.target.classList.contains('supplement-link')) {
-            hideTooltip();
-        }
-    }, true);
+    // NAPOMENA: Stari tooltip sistem je isključen zbog prelaska na Advanced Supplement Manager
+    // Novi sistem ima bolje pozicioniranje i više funkcionalnosti
+    console.log('[TOOLTIP] Stari tooltip sistem je isključen - koristi se Advanced Supplement Manager');
+    return false; // Eksplicitno vraćamo false da označimo da stari sistem nije aktivan
 }
 
 function showTooltip(element, supplementName) {

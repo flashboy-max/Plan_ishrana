@@ -465,17 +465,62 @@ class AdvancedSupplementManager {
     }
 
     initializeTooltips() {
+        // Debouncing varijable za tooltip
+        let tooltipTimeout = null;
+        let currentTooltip = null;
+        
         document.querySelectorAll('.tooltip-trigger').forEach(trigger => {
             const card = trigger.closest('.supplement-card');
             const tooltip = card.querySelector('.supplement-tooltip');
             
             if (tooltip) {
                 trigger.addEventListener('mouseenter', (e) => {
-                    this.showTooltip(tooltip, e.target);
+                    // Poništi postojeći timeout
+                    if (tooltipTimeout) {
+                        clearTimeout(tooltipTimeout);
+                        tooltipTimeout = null;
+                    }
+                    
+                    // Sakrij trenutni tooltip ako postoji
+                    if (currentTooltip && currentTooltip !== tooltip) {
+                        this.hideTooltip(currentTooltip);
+                    }
+                    
+                    // Prikaži novi tooltip sa malim delay-om
+                    tooltipTimeout = setTimeout(() => {
+                        this.showTooltip(tooltip, e.target);
+                        currentTooltip = tooltip;
+                        tooltipTimeout = null;
+                    }, 100); // 100ms delay
                 });
                 
                 trigger.addEventListener('mouseleave', () => {
+                    // Poništi timeout ako još nije izvršen
+                    if (tooltipTimeout) {
+                        clearTimeout(tooltipTimeout);
+                        tooltipTimeout = null;
+                    }
+                    
+                    // Sakrij tooltip sa delay-om da dozvoli prelazak na tooltip
+                    setTimeout(() => {
+                        if (currentTooltip === tooltip) {
+                            this.hideTooltip(tooltip);
+                            currentTooltip = null;
+                        }
+                    }, 150); // 150ms delay
+                });
+                
+                // Dodaj hover za tooltip sam da ne nestaje kad se hover-uje
+                tooltip.addEventListener('mouseenter', () => {
+                    if (tooltipTimeout) {
+                        clearTimeout(tooltipTimeout);
+                        tooltipTimeout = null;
+                    }
+                });
+                
+                tooltip.addEventListener('mouseleave', () => {
                     this.hideTooltip(tooltip);
+                    currentTooltip = null;
                 });
             }
         });
@@ -510,47 +555,68 @@ class AdvancedSupplementManager {
     }
 
     showTooltip(tooltip, trigger) {
+        // Ukloni hidden klasu da se tooltip prikaže i izmeri dimenzije
         tooltip.classList.remove('hidden');
         
-        // Ensure tooltip is positioned fixed and get dimensions
+        // Ensure tooltip is positioned fixed and reset initial position
         tooltip.style.position = 'fixed';
-        tooltip.style.zIndex = '9999';
+        tooltip.style.zIndex = '10000'; // Povećaj z-index
+        tooltip.style.visibility = 'hidden'; // Sakrij vizuelno dok pozicioniramo
+        tooltip.style.left = '0px';
+        tooltip.style.top = '0px';
+        
+        // Force layout calculation
+        tooltip.offsetHeight;
         
         const rect = trigger.getBoundingClientRect();
         const tooltipRect = tooltip.getBoundingClientRect();
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
         
-        // Calculate optimal position with boundary checking
+        const padding = 15; // Padding od krajeva viewport-a
+        
+        // Calculate optimal position with improved boundary checking
         let left = rect.left;
         let top = rect.bottom + 10;
         
-        // Check right boundary
-        if (left + tooltipRect.width > viewportWidth - 20) {
-            left = viewportWidth - tooltipRect.width - 20;
+        // Check right boundary - pozicioniraj lijevo od triggera ako ne stane desno
+        if (left + tooltipRect.width > viewportWidth - padding) {
+            left = rect.right - tooltipRect.width;
+            // Ako ni tako ne stane, pozicioniraj lijevo od viewporta
+            if (left < padding) {
+                left = viewportWidth - tooltipRect.width - padding;
+            }
         }
         
         // Check left boundary
-        if (left < 20) {
-            left = 20;
+        if (left < padding) {
+            left = padding;
         }
         
-        // Check bottom boundary
-        if (top + tooltipRect.height > viewportHeight - 20) {
+        // Check bottom boundary - pozicioniraj iznad triggera ako ne stane ispod
+        if (top + tooltipRect.height > viewportHeight - padding) {
             top = rect.top - tooltipRect.height - 10;
+            
+            // Ako ni iznad ne stane, centriraj vertikalno u viewport
+            if (top < padding) {
+                top = Math.max(padding, (viewportHeight - tooltipRect.height) / 2);
+            }
         }
         
-        // Check top boundary (fallback)
-        if (top < 20) {
-            top = rect.bottom + 10; // Force below even if it clips
+        // Check top boundary (finalni fallback)
+        if (top < padding) {
+            top = padding;
         }
         
         // Apply corrected position
-        tooltip.style.left = `${left}px`;
-        tooltip.style.top = `${top}px`;
+        tooltip.style.left = `${Math.round(left)}px`;
+        tooltip.style.top = `${Math.round(top)}px`;
+        tooltip.style.visibility = 'visible'; // Vrati vidljivost
         
         // Add backdrop to catch clicks
         this.addTooltipBackdrop(tooltip);
+        
+        console.log(`[TOOLTIP] Positioned at: ${Math.round(left)}px, ${Math.round(top)}px (trigger: ${rect.left}, ${rect.top})`);
     }
 
     hideTooltip(tooltip) {

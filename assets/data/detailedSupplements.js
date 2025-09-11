@@ -249,3 +249,7 @@ export const dailyLimits = {
     vitaminC: { max: 1000, warning: 800, unit: 'mg' },
     zinc: { max: 40, warning: 35, unit: 'mg' }
 };
+
+// Eksportuj u globalni opseg za kompatibilnost sa main.js
+window.detailedSupplements = detailedSupplements;
+window.dailyLimits = dailyLimits;

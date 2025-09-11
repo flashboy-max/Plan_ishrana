@@ -1,6 +1,127 @@
 // Glavna JavaScript datoteka - inicijalizacija i konfiguracija
 const startDate = new Date('2025-09-11T00:00:00');
 
+// Generisanje naprednih supplement kartica sa tooltip podrškom
+function generateSupplementCardsHTML() {
+    // Provjeri da li su detailedSupplements dostupni
+    if (typeof detailedSupplements === 'undefined') {
+        // Fallback na osnovne suplementi
+        return `
+            <div class="supplement-card priority-1" data-supplement-id="omega-3" data-priority="1" data-fasting-safe="false" data-timing="sa-hranom">
+                <span class="supplement-link tooltip-trigger" data-supplement="Omega-3">Omega-3</span>
+                <span class="timing">Sa hranom</span>
+                <div class="supplement-tooltip hidden">
+                    <h4>Omega-3</h4>
+                    <p><strong>Doza:</strong> 1-2 kapsule</p>
+                    <p><strong>Benefiti:</strong> Antiinflamatorno, zdravlje srca</p>
+                </div>
+            </div>
+            <div class="supplement-card priority-2" data-supplement-id="vitamin-d3" data-priority="2" data-fasting-safe="true" data-timing="ujutru">
+                <span class="supplement-link tooltip-trigger" data-supplement="Vitamin D3">Vitamin D3</span>
+                <span class="timing">Ujutru</span>
+                <div class="supplement-tooltip hidden">
+                    <h4>Vitamin D3</h4>
+                    <p><strong>Doza:</strong> 2000-4000 IU</p>
+                    <p><strong>Benefiti:</strong> Imunitet, kosti</p>
+                </div>
+            </div>
+            <div class="supplement-card priority-3" data-supplement-id="magnezijum" data-priority="3" data-fasting-safe="true" data-timing="uvece">
+                <span class="supplement-link tooltip-trigger" data-supplement="Magnezijum">Magnezijum</span>
+                <span class="timing">Uveče</span>
+                <div class="supplement-tooltip hidden">
+                    <h4>Magnezijum</h4>
+                    <p><strong>Doza:</strong> 400mg</p>
+                    <p><strong>Benefiti:</strong> Relaksacija, san</p>
+                </div>
+            </div>
+            <div class="supplement-card" data-supplement-id="mct-oil" data-priority="2" data-fasting-safe="true" data-timing="ujutru">
+                <span class="supplement-link tooltip-trigger" data-supplement="MCT Oil">MCT Oil</span>
+                <span class="timing">Ujutru</span>
+                <div class="supplement-tooltip hidden">
+                    <h4>MCT Oil</h4>
+                    <p><strong>Doza:</strong> 1 kašičica</p>
+                    <p><strong>Benefiti:</strong> Brza energija</p>
+                </div>
+            </div>
+            <div class="supplement-card" data-supplement-id="elektroliti" data-priority="2" data-fasting-safe="true" data-timing="tokom-dana">
+                <span class="supplement-link tooltip-trigger" data-supplement="Elektroliti">Elektroliti</span>
+                <span class="timing">Tokom dana</span>
+                <div class="supplement-tooltip hidden">
+                    <h4>Elektroliti</h4>
+                    <p><strong>Doza:</strong> Prema potrebi</p>
+                    <p><strong>Benefiti:</strong> Hidratacija</p>
+                </div>
+            </div>
+            <div class="supplement-card" data-supplement-id="kreatin" data-priority="1" data-fasting-safe="true" data-timing="bilo-kada">
+                <span class="supplement-link tooltip-trigger" data-supplement="Kreatin">Kreatin</span>
+                <span class="timing">Bilo kada</span>
+                <div class="supplement-tooltip hidden">
+                    <h4>Kreatin</h4>
+                    <p><strong>Doza:</strong> 5g</p>
+                    <p><strong>Benefiti:</strong> Snaga, performanse</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // Koristi detaljne podatke iz detailedSupplements.js
+    const supplements = Object.entries(detailedSupplements);
+    
+    return supplements.map(([id, supplement]) => `
+        <div class="supplement-card ${supplement.fastingSafe ? 'fasting-safe' : 'breaks-fast'}" 
+             data-supplement-id="${id}"
+             data-priority="${supplement.priority}"
+             data-fasting-safe="${supplement.fastingSafe}"
+             data-timing="${supplement.timing.join(',')}"
+             data-category="${supplement.category}">
+             
+            <div class="supplement-header">
+                <span class="supplement-link tooltip-trigger font-medium text-white" 
+                      data-supplement="${id}">
+                    ${supplement.name}
+                </span>
+                <div class="supplement-badges">
+                    <span class="priority-badge priority-${supplement.priority}">
+                        ${'★'.repeat(supplement.priority)}
+                    </span>
+                    <span class="fasting-badge ${supplement.fastingSafe ? 'safe' : 'breaks-fast'}">
+                        ${supplement.fastingSafe ? 'Ne kvari post' : 'U prozoru'}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="supplement-details">
+                <div class="detail-row">
+                    <span class="detail-label">Doza:</span>
+                    <span class="detail-value">${supplement.dose}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Kada:</span>
+                    <span class="detail-value">${supplement.timeSlots.join(', ')}</span>
+                </div>
+            </div>
+            
+            <div class="supplement-actions">
+                <button class="taken-today-btn" data-supplement="${id}">
+                    <i class="fas fa-check mr-1"></i>Uzeto danas
+                </button>
+                <button class="details-btn" data-supplement="${id}">
+                    <i class="fas fa-info-circle mr-1"></i>Detalji
+                </button>
+            </div>
+            
+            <!-- Hidden tooltip -->
+            <div class="supplement-tooltip hidden">
+                <h4>${supplement.name}</h4>
+                <p><strong>Brend:</strong> ${supplement.brand}</p>
+                <p><strong>Benefiti:</strong> ${supplement.benefits}</p>
+                <p><strong>Napomene:</strong> ${supplement.notes}</p>
+                <p><strong>Interakcije:</strong> ${supplement.interactions}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
 // Globalna inicijalizacija kada se stranica učita
 document.addEventListener('DOMContentLoaded', function () {
     // Inicijalizuj osnovne komponente
@@ -26,22 +147,176 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicijalizuj accordion funkcionalnost
     initializeAccordion();
 
-    // Inicijalizuj tooltips NAKON što je sadržaj generisan
-    initializeTooltips();
+    // ISKLJUČI stari tooltip sistem - prelazimo na Advanced Supplement Manager
+    // initializeTooltips(); // ← ZAKOMENTARISANO
 
-    // Inicijalizuj Advanced Supplement Manager umjesto osnovnog
-    if (typeof AdvancedSupplementManager !== 'undefined') {
+    // Čekaj učitavanje modula prije inicijalizacije
+    waitForModules().then(() => {
+        console.log('✅ Moduli učitani - inicijalizujem Advanced Manager');
+
+        // Inicijalizuj Advanced Supplement Manager
         window.supplementManager = new AdvancedSupplementManager();
-    } else if (typeof initializeSupplementPlanner === 'function') {
-        // Fallback na osnovni sistem ako napredni nije dostupan
-        initializeSupplementPlanner();
-    }
+
+        // Ažuriraj dnevni prikaz sa novom strukturom
+        updateDailySupplementsWithTooltips();
+
+        // Dodaj globalne tooltip event listener-e
+        initializeGlobalTooltips();
+
+    }).catch(error => {
+        console.error('❌ Greška pri učitavanju modula:', error);
+        // Fallback na osnovni sistem
+        if (typeof initializeSupplementPlanner === 'function') {
+            initializeSupplementPlanner();
+        }
+    });
 
     // Zatraži dozvolu za notifikacije
     if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission();
     }
 });
+
+// NOVA FUNKCIJA: Čekaj učitavanje modula sa Promise
+function waitForModules() {
+    return new Promise((resolve, reject) => {
+        const maxAttempts = 50; // 5 sekundi (50 * 100ms)
+        let attempts = 0;
+
+        const checkModules = () => {
+            attempts++;
+
+            if (typeof detailedSupplements !== 'undefined' && typeof AdvancedSupplementManager !== 'undefined') {
+                console.log('✅ detailedSupplements i AdvancedSupplementManager učitani');
+                resolve();
+            } else if (attempts >= maxAttempts) {
+                reject(new Error('Timeout: Moduli se nisu učitali u roku od 5 sekundi'));
+            } else {
+                console.log(`⏳ Čekam učitavanje modula... (${attempts}/${maxAttempts})`);
+                setTimeout(checkModules, 100);
+            }
+        };
+
+        checkModules();
+    });
+}
+
+// NOVA FUNKCIJA: Ažuriraj dnevni prikaz sa tooltip podrškom
+function updateDailySupplementsWithTooltips() {
+    const dailyContainer = document.querySelector('#danasnji-plan-container .supplements-grid');
+    if (dailyContainer && typeof detailedSupplements !== 'undefined') {
+        console.log('🔄 Ažuriram dnevni prikaz sa tooltip podrškom');
+        dailyContainer.innerHTML = generateSupplementCardsHTML();
+    }
+}
+
+// NOVA FUNKCIJA: Globalni tooltip event listeners
+function initializeGlobalTooltips() {
+    let currentTooltip = null;
+    let tooltipTimeout = null;
+
+    // Mouseenter sa debouncing
+    document.addEventListener('mouseenter', function(e) {
+        if (e.target.classList.contains('tooltip-trigger')) {
+            clearTimeout(tooltipTimeout);
+            tooltipTimeout = setTimeout(() => {
+                showGlobalTooltip(e.target);
+            }, 100);
+        }
+    }, true);
+
+    // Mouseleave sa delay
+    document.addEventListener('mouseleave', function(e) {
+        if (e.target.classList.contains('tooltip-trigger')) {
+            clearTimeout(tooltipTimeout);
+            tooltipTimeout = setTimeout(() => {
+                hideGlobalTooltip();
+            }, 150);
+        }
+    }, true);
+
+    // Click-outside za tooltip
+    document.addEventListener('click', function(e) {
+        if (currentTooltip && !currentTooltip.contains(e.target) && !e.target.classList.contains('tooltip-trigger')) {
+            hideGlobalTooltip();
+        }
+    });
+
+    function showGlobalTooltip(trigger) {
+        hideGlobalTooltip(); // Sakrij postojeći
+
+        const card = trigger.closest('.supplement-card');
+        const tooltip = card?.querySelector('.supplement-tooltip');
+
+        if (!tooltip) {
+            console.warn('No tooltip found for supplement:', trigger.dataset.supplement);
+            return;
+        }
+
+        // Popuni tooltip sadržaj
+        const supplementId = trigger.dataset.supplement;
+        if (typeof detailedSupplements !== 'undefined' && detailedSupplements[supplementId]) {
+            const supplement = detailedSupplements[supplementId];
+            tooltip.innerHTML = `
+                <h4 class="font-bold text-cyan-400 mb-2">${supplement.name}</h4>
+                <p class="text-sm text-gray-300 mb-2"><strong>Brend:</strong> ${supplement.brand}</p>
+                <p class="text-sm text-gray-300 mb-2"><strong>Benefiti:</strong> ${supplement.benefits}</p>
+                <p class="text-sm text-gray-300 mb-2"><strong>Napomene:</strong> ${supplement.notes}</p>
+                <p class="text-sm text-amber-300"><strong>Interakcije:</strong> ${supplement.interactions}</p>
+            `;
+        }
+
+        // Pozicioniranje sa viewport bounds checking
+        const rect = trigger.getBoundingClientRect();
+        const scrollTop = window.pageYOffset;
+        const scrollLeft = window.pageXOffset;
+
+        // Temporary show za tačne dimenzije
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.display = 'block';
+        tooltip.classList.remove('hidden');
+
+        const tooltipRect = tooltip.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        // Kalkulacija pozicije
+        let top = rect.bottom + scrollTop + 8;
+        let left = rect.left + scrollLeft + (rect.width / 2) - (tooltipRect.width / 2);
+
+        // Horizontalno pozicioniranje
+        const padding = 15;
+        if (left < padding) {
+            left = padding;
+        } else if (left + tooltipRect.width > viewportWidth - padding) {
+            left = viewportWidth - tooltipRect.width - padding;
+        }
+
+        // Vertikalno pozicioniranje - ako izlazi van viewport-a, prikaži iznad
+        if (top + tooltipRect.height > viewportHeight + scrollTop - padding) {
+            top = rect.top + scrollTop - tooltipRect.height - 8;
+        }
+
+        // Konačno pozicioniranje
+        tooltip.style.position = 'fixed';
+        tooltip.style.top = Math.round(top) + 'px';
+        tooltip.style.left = Math.round(left) + 'px';
+        tooltip.style.zIndex = '9999';
+        tooltip.style.visibility = 'visible';
+
+        currentTooltip = tooltip;
+
+        console.log(`[GLOBAL TOOLTIP] Positioned at: ${Math.round(left)}px, ${Math.round(top)}px (viewport: ${viewportWidth}x${viewportHeight})`);
+    }
+
+    function hideGlobalTooltip() {
+        if (currentTooltip) {
+            currentTooltip.classList.add('hidden');
+            currentTooltip.style.display = 'none';
+            currentTooltip = null;
+        }
+    }
+}
 
 // Cleanup na window unload
 window.addEventListener('beforeunload', function() {
@@ -191,30 +466,7 @@ function generateDayHTML(dayData, dayNumber) {
                     <h4 class="section-title">Suplementacija</h4>
                 </div>
                 <div class="supplements-grid">
-                    <div class="supplement-card priority-1">
-                        <span class="supplement-link" data-supplement="Omega-3">Omega-3</span>
-                        <span class="timing">Sa hranom</span>
-                    </div>
-                    <div class="supplement-card priority-2">
-                        <span class="supplement-link" data-supplement="Vitamin D3">Vitamin D3</span>
-                        <span class="timing">Ujutru</span>
-                    </div>
-                    <div class="supplement-card priority-3">
-                        <span class="supplement-link" data-supplement="Magnezijum">Magnezijum</span>
-                        <span class="timing">Uveče</span>
-                    </div>
-                    <div class="supplement-card">
-                        <span class="supplement-link" data-supplement="MCT Oil">MCT Oil</span>
-                        <span class="timing">Ujutru</span>
-                    </div>
-                    <div class="supplement-card">
-                        <span class="supplement-link" data-supplement="Elektroliti">Elektroliti</span>
-                        <span class="timing">Tokom dana</span>
-                    </div>
-                    <div class="supplement-card">
-                        <span class="supplement-link" data-supplement="Kreatin">Kreatin</span>
-                        <span class="timing">Bilo kada</span>
-                    </div>
+                    ${generateSupplementCardsHTML()}
                 </div>
             </div>
 
@@ -293,18 +545,7 @@ function generateWeekDaySummary(dayData, dayNumber) {
                     <h4 class="section-title">Suplementacija</h4>
                 </div>
                 <div class="supplements-grid">
-                    <div class="supplement-card priority-1">
-                        <span class="supplement-link" data-supplement="Omega-3">Omega-3</span>
-                        <span class="timing">Sa hranom</span>
-                    </div>
-                    <div class="supplement-card priority-2">
-                        <span class="supplement-link" data-supplement="Vitamin D3">Vitamin D3</span>
-                        <span class="timing">Ujutru</span>
-                    </div>
-                    <div class="supplement-card priority-3">
-                        <span class="supplement-link" data-supplement="Magnezijum">Magnezijum</span>
-                        <span class="timing">Uveče</span>
-                    </div>
+                    ${generateSupplementCardsHTML()}
                 </div>
             </div>
         </div>

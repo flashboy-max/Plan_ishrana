@@ -10,6 +10,15 @@ class AdvancedSupplementManager {
         this.notificationInterval = null;
         
         this.initializeManager();
+        
+        // Add global escape key listener for tooltips
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.supplement-tooltip:not(.hidden)').forEach(tooltip => {
+                    this.hideTooltip(tooltip);
+                });
+            }
+        });
     }
 
     initializeManager() {
@@ -200,7 +209,7 @@ class AdvancedSupplementManager {
                      data-supplement-id="${id}"
                      data-priority="${supplement.priority}"
                      data-fasting-safe="${supplement.fastingSafe}"
-                     data-timing="${supplement.timing.join(',')}"
+                     data-timing="${Array.isArray(supplement.timing) ? supplement.timing.join(',') : supplement.timing}"
                      data-category="${supplement.category}">
                     
                     <div class="supplement-header mb-3">
@@ -391,7 +400,7 @@ class AdvancedSupplementManager {
 
             // Filter by timing
             if (this.activeTiming !== 'all') {
-                const cardTimings = card.dataset.timing.split(',');
+                const cardTimings = card.dataset.timing ? card.dataset.timing.split(',') : [];
                 if (!cardTimings.includes(this.activeTiming)) {
                     showCard = false;
                 }
@@ -471,13 +480,31 @@ class AdvancedSupplementManager {
             }
         });
 
-        // Details button functionality
+        // Details button functionality (improved)
         document.querySelectorAll('.details-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
+                e.preventDefault();
+                
                 const card = e.target.closest('.supplement-card');
                 const tooltip = card.querySelector('.supplement-tooltip');
-                tooltip.classList.toggle('hidden');
+                
+                if (tooltip) {
+                    // Toggle tooltip visibility
+                    if (tooltip.classList.contains('hidden')) {
+                        // Hide any other open tooltips first
+                        document.querySelectorAll('.supplement-tooltip').forEach(t => {
+                            if (t !== tooltip) {
+                                this.hideTooltip(t);
+                            }
+                        });
+                        
+                        // Show this tooltip
+                        this.showTooltip(tooltip, e.target);
+                    } else {
+                        this.hideTooltip(tooltip);
+                    }
+                }
             });
         });
     }
@@ -485,15 +512,81 @@ class AdvancedSupplementManager {
     showTooltip(tooltip, trigger) {
         tooltip.classList.remove('hidden');
         
-        const rect = trigger.getBoundingClientRect();
+        // Ensure tooltip is positioned fixed and get dimensions
         tooltip.style.position = 'fixed';
-        tooltip.style.left = `${rect.left}px`;
-        tooltip.style.top = `${rect.bottom + 10}px`;
-        tooltip.style.zIndex = '1000';
+        tooltip.style.zIndex = '9999';
+        
+        const rect = trigger.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // Calculate optimal position with boundary checking
+        let left = rect.left;
+        let top = rect.bottom + 10;
+        
+        // Check right boundary
+        if (left + tooltipRect.width > viewportWidth - 20) {
+            left = viewportWidth - tooltipRect.width - 20;
+        }
+        
+        // Check left boundary
+        if (left < 20) {
+            left = 20;
+        }
+        
+        // Check bottom boundary
+        if (top + tooltipRect.height > viewportHeight - 20) {
+            top = rect.top - tooltipRect.height - 10;
+        }
+        
+        // Check top boundary (fallback)
+        if (top < 20) {
+            top = rect.bottom + 10; // Force below even if it clips
+        }
+        
+        // Apply corrected position
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+        
+        // Add backdrop to catch clicks
+        this.addTooltipBackdrop(tooltip);
     }
 
     hideTooltip(tooltip) {
         tooltip.classList.add('hidden');
+        this.removeTooltipBackdrop();
+    }
+
+    addTooltipBackdrop(tooltip) {
+        // Remove existing backdrop
+        this.removeTooltipBackdrop();
+        
+        // Create invisible backdrop to catch outside clicks
+        const backdrop = document.createElement('div');
+        backdrop.className = 'tooltip-backdrop';
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9998;
+            background: transparent;
+        `;
+        
+        backdrop.addEventListener('click', () => {
+            this.hideTooltip(tooltip);
+        });
+        
+        document.body.appendChild(backdrop);
+    }
+
+    removeTooltipBackdrop() {
+        const backdrop = document.querySelector('.tooltip-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
     }
 
     initializeQuickActions() {
@@ -848,6 +941,14 @@ class AdvancedSupplementManager {
         if (this.filterTimeout) {
             clearTimeout(this.filterTimeout);
         }
+        
+        // Remove tooltip backdrop if exists
+        this.removeTooltipBackdrop();
+        
+        // Remove any open tooltips
+        document.querySelectorAll('.supplement-tooltip').forEach(tooltip => {
+            tooltip.classList.add('hidden');
+        });
     }
 }
 

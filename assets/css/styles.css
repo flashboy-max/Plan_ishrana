@@ -291,10 +291,13 @@ body {
     border: 1px solid #374151;
     border-radius: 0.5rem;
     padding: 1rem;
-    max-width: 300px;
+    max-width: 320px;
+    min-width: 280px;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(8px);
-    z-index: 1000;
+    z-index: 9999;
+    position: fixed;
+    pointer-events: auto;
 }
 
 .supplement-tooltip h4 {
@@ -313,6 +316,18 @@ body {
 
 .supplement-tooltip p strong {
     color: #ffffff;
+}
+
+/* Tooltip backdrop for click-outside functionality */
+.tooltip-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9998;
+    background: transparent;
+    cursor: default;
 }
 
 /* Enhanced Dose Counter */

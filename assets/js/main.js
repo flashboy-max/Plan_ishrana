@@ -29,6 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicijalizuj tooltips NAKON što je sadržaj generisan
     initializeTooltips();
 
+    // Inicijalizuj supplement planner
+    if (typeof initializeSupplementPlanner === 'function') {
+        initializeSupplementPlanner();
+    }
+
     // Debug mode
     if (window.location.hash === '#debug') {
         enableDebugMode();
@@ -158,7 +163,7 @@ function generateDayHTML(dayData, dayNumber) {
             <div class="meals-section mb-6">
                 <div class="section-header">
                     <i class="fas fa-utensils section-icon"></i>
-                    <h4 class="section-title">Obroci (IF 18/6: 11:00-19:00)</h4>
+                    <h4 class="section-title">Obroci (IF 18/6: 13:00-19:00)</h4>
                 </div>
                 <div class="meals-grid">
                     ${generateMealsHTML(dayNumber)}
@@ -446,12 +451,12 @@ function initializeAccordion() {
 function generateMealsHTML(dayNumber) {
     const meals = [
         {
-            title: "Obrok 1 (oko 11:30)",
+            title: "Obrok 1 (oko 13:30)",
             description: getMealForDay(dayNumber, 1),
             macros: "~30-40g proteina, ~25-35g masti, ~8-12g ugljenih hidrata"
         },
         {
-            title: "Obrok 2 (oko 16:30)",
+            title: "Obrok 2 (oko 17:30)",
             description: getMealForDay(dayNumber, 2),
             macros: "~35-45g proteina, ~20-30g masti, ~10-15g ugljenih hidrata"
         }

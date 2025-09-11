@@ -13,8 +13,8 @@ function updateIFTimer() {
     const currentMinute = now.getMinutes();
     const currentSecond = now.getSeconds();
     
-    // IF 18/6 protokol: Eating Window 11:00-19:00, Fasting Period 19:00-11:00
-    const eatingStartHour = 11;
+    // IF 18/6 protokol: Eating Window 13:00-19:00, Fasting Period 19:00-13:00
+    const eatingStartHour = 13;
     const eatingEndHour = 19;
     
     const isEatingWindow = currentHour >= eatingStartHour && currentHour < eatingEndHour;

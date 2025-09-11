@@ -29,9 +29,24 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicijalizuj tooltips NAKON što je sadržaj generisan
     initializeTooltips();
 
-    // Inicijalizuj supplement planner
-    if (typeof initializeSupplementPlanner === 'function') {
+    // Inicijalizuj Advanced Supplement Manager umjesto osnovnog
+    if (typeof AdvancedSupplementManager !== 'undefined') {
+        window.supplementManager = new AdvancedSupplementManager();
+    } else if (typeof initializeSupplementPlanner === 'function') {
+        // Fallback na osnovni sistem ako napredni nije dostupan
         initializeSupplementPlanner();
+    }
+
+    // Zatraži dozvolu za notifikacije
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+});
+
+// Cleanup na window unload
+window.addEventListener('beforeunload', function() {
+    if (window.supplementManager && typeof window.supplementManager.destroy === 'function') {
+        window.supplementManager.destroy();
     }
 
     // Debug mode

@@ -249,22 +249,22 @@
             </div>
         </div>
 
-        <!-- Supplement Planner -->
+        <!-- Advanced Supplement Timing Planner -->
         <div class="card mb-6 sm:mb-8">
             <button class="accordion-button w-full flex justify-between items-center text-left text-lg sm:text-xl font-semibold text-white mb-4 hover:text-cyan-400 transition-colors">
-                <span class="flex items-center"><i class="fas fa-clock mr-3 text-cyan-400"></i>Supplement Timing Planner</span>
+                <span class="flex items-center"><i class="fas fa-brain mr-3 text-cyan-400"></i>Advanced Supplement Manager</span>
                 <i class="fas fa-chevron-down transition-transform duration-300"></i>
             </button>
             <div class="accordion-content space-y-4">
-                <div id="supplement-planner" class="grid grid-cols-1 md:grid-cols-2 gap-4" data-current-day="1">
-                    <!-- Supplement cards will be generated here -->
+                <div id="supplement-planner" class="advanced-supplement-container" data-current-day="1">
+                    <!-- Advanced supplement interface will be generated here -->
                 </div>
-                <div class="mt-4 p-3 bg-blue-900/20 border border-blue-600/50 rounded-lg">
-                    <p class="text-sm text-blue-200">
+                <div class="mt-4 p-3 bg-cyan-900/20 border border-cyan-600/50 rounded-lg">
+                    <p class="text-sm text-cyan-200">
                         <i class="fas fa-info-circle mr-2"></i>
-                        <span class="px-2 py-0.5 rounded bg-emerald-800/50 text-emerald-200 text-xs mr-2">Ne kvari post</span>
-                        <span class="px-2 py-0.5 rounded bg-orange-800/50 text-orange-200 text-xs">U prozoru</span>
-                        - klik na karticu za detalje o doziranju
+                        <strong>Smart Filter System:</strong> Filtruj po prioritetu, timing-u ili kategoriji · 
+                        <strong>Timing Notifications:</strong> Automatska obavještenja · 
+                        <strong>Dose Tracking:</strong> Prati interakcije i limitе
                     </p>
                 </div>
             </div>
@@ -390,6 +390,7 @@
     <script src="assets/data/meals.js"></script>
     <script src="assets/data/planData.js"></script>
     <script type="module" src="assets/data/supplementPlanner.js"></script>
+    <script type="module" src="assets/data/detailedSupplements.js"></script>
     
     <!-- Load JavaScript Modules -->
     <script src="assets/js/tooltip.js"></script>
@@ -398,6 +399,7 @@
     <script src="assets/js/checklist.js"></script>
     <script src="assets/js/ifTimer.js"></script>
     <script type="module" src="assets/js/supplementPlanner.js"></script>
+    <script type="module" src="assets/js/advancedSupplementManager.js"></script>
     <script src="assets/js/main.js"></script>
 
 </body>

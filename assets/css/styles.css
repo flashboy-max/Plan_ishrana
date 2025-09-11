@@ -38,26 +38,28 @@ body {
 
 /* ===== POPRAVKE ZA SUPPLEMENT GRID LAYOUT ===== */
 
-/* Dnevni prikaz - jednostavniji grid */
+/* VERTIKALNI LAYOUT - Dnevni prikaz */
 #danasnji-plan-container .supplements-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    justify-items: center;
-    align-items: start;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    margin-bottom: 1.5rem !important;
+    max-width: 600px !important;
+    margin: 0 auto 1.5rem auto !important;
+    border: 2px solid #22c55e !important; /* DEBUG: Zeleni border */
 }
 
-/* Accordion prikaz - responsive grid */
+/* VERTIKALNI LAYOUT - Advanced Supplement Manager */
 .advanced-supplement-container .supplements-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    padding: 1rem 0;
-    min-height: auto;
-    justify-items: center;
-    align-items: start;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    margin-bottom: 2rem !important;
+    padding: 1rem 0 !important;
+    min-height: auto !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
+    border: 2px solid #3b82f6 !important; /* DEBUG: Plavi border */
 }
 
 /* Spreči preklapanje kada se accordion proširi */
@@ -3185,5 +3187,512 @@ body {
     .supplement-tooltip {
         max-width: 250px;
         padding: 0.75rem;
+    }
+}
+
+/* ===== MODAL STILOVI ===== */
+#supplementModal {
+    backdrop-filter: blur(4px);
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+#supplementModal.hidden {
+    animation: modalFadeOut 0.2s ease-in;
+}
+
+#supplementModal .bg-gray-800 {
+    animation: modalSlideIn 0.3s ease-out;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes modalSlideIn {
+    from { 
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+    to { 
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Responsive za mobile */
+@media (max-width: 768px) {
+    #supplementModal .bg-gray-800 {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+    
+    #supplementModal .grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Poboljšanja za supplement kartice */
+.supplement-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.details-btn, .taken-today-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.details-btn {
+    background-color: #0891b2;
+    color: white;
+}
+
+.details-btn:hover {
+    background-color: #0e7490;
+}
+
+.taken-today-btn {
+    background-color: #0891b2;
+    color: white;
+}
+
+.taken-today-btn:hover {
+    background-color: #0e7490;
+}
+
+.taken-today-btn.taken {
+    background-color: #059669 !important;
+}
+
+.taken-today-btn.taken:hover {
+    background-color: #047857 !important;
+}
+
+/* Loading indikator za supplement grid */
+.loading-placeholder {
+    background-color: #1f2937;
+    border: 1px dashed #374151;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    margin: 1rem 0;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* ===== NOVI SUPPLEMENT PLANNER STILOVI ===== */
+
+/* SKELETON LOADER */
+.supplement-skeleton {
+    background: rgba(31, 41, 55, 0.6);
+    border: 1px solid #374151;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.skeleton-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.skeleton-title {
+    height: 1.5rem;
+    width: 60%;
+    border-radius: 0.25rem;
+}
+
+.skeleton-badge {
+    height: 1.25rem;
+    width: 3rem;
+    border-radius: 9999px;
+}
+
+.skeleton-content {
+    margin-bottom: 1rem;
+}
+
+.skeleton-line {
+    height: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.skeleton-line:nth-child(1) { width: 100%; }
+.skeleton-line:nth-child(2) { width: 80%; }
+.skeleton-line:nth-child(3) { width: 60%; }
+
+.skeleton-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.skeleton-button {
+    height: 2.5rem;
+    border-radius: 0.375rem;
+    flex: 1;
+}
+
+.skeleton-pulse {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { background-position: 200% 0; }
+    50% { background-position: 0 0; }
+}
+
+/* ERROR STATE */
+.error-state {
+    text-align: center;
+    padding: 2rem;
+    color: #ef4444;
+}
+
+.error-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #ef4444;
+}
+
+.error-state h3 {
+    color: #f87171;
+    margin-bottom: 0.5rem;
+}
+
+.error-state p {
+    color: #fca5a5;
+    margin-bottom: 1.5rem;
+}
+
+.retry-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.retry-btn:hover {
+    background: #b91c1c;
+}
+
+/* SUPPLEMENT PLANNER CONTAINER */
+.supplement-planner-container {
+    max-width: 100%;
+}
+
+/* PERIOD HEADER */
+.period-header {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(14, 165, 233, 0.1));
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.period-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.period-icon {
+    font-size: 2rem;
+    color: #06b6d4;
+}
+
+.period-details h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.period-time {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    margin: 0.25rem 0;
+}
+
+.period-description {
+    color: #6b7280;
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+.period-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-btn {
+    background: rgba(55, 65, 81, 0.5);
+    border: 1px solid #4b5563;
+    color: #d1d5db;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn:hover {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: #06b6d4;
+    color: #06b6d4;
+}
+
+.current-period {
+    font-weight: 600;
+    color: #06b6d4;
+    min-width: 6rem;
+    text-align: center;
+}
+
+/* CONSISTENCY TRACKER */
+.consistency-tracker {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(59, 130, 246, 0.2));
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.progress-header h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.progress-percentage {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #a855f7;
+}
+
+.progress-bar {
+    height: 0.75rem;
+    background: #374151;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #a855f7, #3b82f6);
+    border-radius: 9999px;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+/* MINERALS TRACKER */
+.minerals-tracker {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.minerals-tracker h4 {
+    margin: 0 0 1rem 0;
+    color: #ffffff;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.minerals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.mineral-item {
+    background: rgba(55, 65, 81, 0.5);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    transition: all 0.2s;
+}
+
+.mineral-item.warning {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.mineral-item.over-limit {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.mineral-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.mineral-name {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 0.875rem;
+}
+
+.mineral-amount {
+    color: #06b6d4;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.mineral-bar {
+    height: 0.5rem;
+    background: #374151;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+}
+
+.mineral-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #06b6d4, #0891b2);
+    border-radius: 9999px;
+    transition: width 0.3s ease;
+}
+
+.mineral-limit {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+/* SUPPLEMENTS GRID - PERIOD BASED */
+.supplements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* PERIOD SUMMARY */
+.period-summary {
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.period-summary p {
+    margin: 0.25rem 0;
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.period-summary strong {
+    color: #06b6d4;
+    font-weight: 600;
+}
+
+/* ===== VERTIKALNI LAYOUT OVERRIDE ===== */
+/* Forsiraj vertikalni layout za sve supplement kartice */
+.supplement-card {
+    width: 100% !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
+    min-width: unset !important;
+}
+
+/* Osiguraj da su dugmad pravilno poravnata */
+.supplement-actions {
+    display: flex !important;
+    gap: 0.75rem !important;
+    margin-top: 1rem !important;
+    justify-content: space-between !important;
+}
+
+.details-btn, .taken-today-btn {
+    flex: 1 !important;
+    text-align: center !important;
+}
+
+/* Mobile optimizacija */
+@media (max-width: 768px) {
+    #danasnji-plan-container .supplements-grid,
+    .advanced-supplement-container .supplements-grid,
+    .supplements-grid {
+        grid-template-columns: 1fr !important;
+        padding: 0.5rem !important;
+        gap: 0.75rem !important;
+    }
+
+    .supplement-card {
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .period-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .minerals-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .consistency-tracker,
+    .minerals-tracker {
+        padding: 1rem;
     }
 }

@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aleksandrov 28-dnevni Plan</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+    <script src="debug-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css?v=20250911141500">
 </head>
 <body class="p-2 sm:p-4 lg:p-8">
     <div class="max-w-6xl mx-auto">
@@ -391,6 +393,74 @@
     <script src="assets/data/planData.js"></script>
     <script type="module" src="assets/data/supplementPlanner.js"></script>
     <script type="module" src="assets/data/detailedSupplements.js"></script>
+    
+    <!-- SUPPLEMENT DETAILS MODAL -->
+    <div id="supplementModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 border border-gray-600 rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-6 border-b border-gray-600">
+                <h3 id="modalSupplementName" class="text-xl font-bold text-cyan-400"></h3>
+                <button id="closeModal" class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-gray-700/50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-400">Brend</div>
+                        <div id="modalBrand" class="font-medium text-white"></div>
+                    </div>
+                    <div class="bg-gray-700/50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-400">Prioritet</div>
+                        <div id="modalPriority" class="font-medium text-yellow-400"></div>
+                    </div>
+                    <div class="bg-gray-700/50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-400">Timing</div>
+                        <div id="modalTiming" class="font-medium text-blue-300"></div>
+                    </div>
+                    <div class="bg-gray-700/50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-400">Post Status</div>
+                        <div id="modalFasting" class="font-medium"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-900/20 p-4 rounded-lg border border-blue-600/30">
+                    <h4 class="font-semibold text-blue-300 mb-2 flex items-center">
+                        <i class="fas fa-heart mr-2"></i>Benefiti
+                    </h4>
+                    <p id="modalBenefits" class="text-gray-300"></p>
+                </div>
+                
+                <div class="bg-green-900/20 p-4 rounded-lg border border-green-600/30">
+                    <h4 class="font-semibold text-green-300 mb-2 flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>Napomene
+                    </h4>
+                    <p id="modalNotes" class="text-gray-300"></p>
+                </div>
+                
+                <div class="bg-amber-900/20 p-4 rounded-lg border border-amber-600/30">
+                    <h4 class="font-semibold text-amber-300 mb-2 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>Interakcije
+                    </h4>
+                    <p id="modalInteractions" class="text-gray-300"></p>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-gray-600 flex justify-between items-center">
+                <button id="modalTakenBtn" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors">
+                    <i class="fas fa-check mr-2"></i>Uzeto danas
+                </button>
+                <button id="closeModalBtn" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                    Zatvori
+                </button>
+            </div>
+        </div>
+    </div>
     
     <!-- Load JavaScript Modules -->
     <!-- <script src="assets/js/tooltip.js"></script> --> <!-- ISKLJUČENO: Koristi se Advanced Supplement Manager -->

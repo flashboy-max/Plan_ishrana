@@ -1,10 +1,27 @@
 // Glavna JavaScript datoteka - inicijalizacija i konfiguracija
 const startDate = new Date('2025-09-11T00:00:00');
 
-// Generisanje naprednih supplement kartica sa tooltip podrškom
-function generateSupplementCardsHTML() {
-    // Provjeri da li su detailedSupplements dostupni
+// === GLOBAL DEBUG FUNCTION ===
+window.debugLog = function(...args) {
+    // UVIJEK loguj za debugging SupplementPlanner problema
+    console.log('%c[DEBUG]', 'color: #00ff88; font-weight: bold;', ...args);
+};
+
+// Enable debug mode
+window.DEBUG = true;
+
+// Make debugLog available globally for imports
+globalThis.debugLog = window.debugLog;
+
+// UKLONJENA FUNKCIJA: generateSupplementCardsHTML
+// Razlog: Nove SupplementPlanner klasa preuzima potpunu kontrolu
+function generateSupplementCardsHTML_DEPRECATED() {
+    // FUNKCIJA ONEMOGUĆENA - koristi se nova SupplementPlanner klasa
+    console.warn('⚠️ generateSupplementCardsHTML pozvan - DEPRECATED! Koristi SupplementPlanner umesto toga');
+    return '<div class="error">Koristi SupplementPlanner klasu</div>';
+    
     if (typeof detailedSupplements === 'undefined') {
+        debugLog('⚠️ detailedSupplements nije dostupan - koristim fallback');
         // Fallback na osnovne suplementi
         return `
             <div class="supplement-card priority-1" data-supplement-id="omega-3" data-priority="1" data-fasting-safe="false" data-timing="sa-hranom">
@@ -132,8 +149,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentDay = getCurrentDay();
     updateProgressBar(currentDay);
 
-    // Generisanje današnjeg fokusa
-    initializeTodayFocus(currentDay);
+    // Generisanje današnjeg fokusa - BEZ supplement sekcije na početak
+    initializeTodayFocusBasic(currentDay);
 
     // Generisanje sedmičnih pregleda (bez checklist-a)
     generateWeekHTML(1, 7, 'sedmica-1-content');
@@ -152,23 +169,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Čekaj učitavanje modula prije inicijalizacije
     waitForModules().then(() => {
-        console.log('✅ Moduli učitani - inicijalizujem Advanced Manager');
+        debugLog('✅ Moduli učitani - inicijalizujem Advanced Manager');
 
-        // Inicijalizuj Advanced Supplement Manager
-        window.supplementManager = new AdvancedSupplementManager();
+        // Inicijalizuj Advanced Supplement Manager (novu SupplementPlanner klasu)
+        // Koristi globalnu instancu koja se automatski kreira u advancedSupplementManager.js
+        if (window.supplementPlanner) {
+            debugLog('🎯 SupplementPlanner već inicijalizovan automatski');
+        } else {
+            debugLog('⚠️ Kreiram novu instancu SupplementPlanner');
+            window.supplementPlanner = new window.SupplementPlanner();
+        }
 
-        // Ažuriraj dnevni prikaz sa novom strukturom
-        updateDailySupplementsWithTooltips();
+        // UKLONJEN: updateDailySupplementsWithTooltips() - nova SupplementPlanner klasa preuzima kontrolu
+        debugLog('🎯 SupplementPlanner preuzeo kontrolu nad #supplement-planner containerom');
 
-        // Dodaj globalne tooltip event listener-e
-        initializeGlobalTooltips();
+        // FORSIRAJ REFLOW ZA STABILIZACIJU LAYOUT-A
+        // Ovo rješava "layout flash" problem na inicijalnom load-u
+        requestAnimationFrame(() => {
+            const grid = document.querySelector('#danasnji-plan-container .supplements-grid');
+            if (grid) {
+                // Pristupanje offsetHeight svojstvu tjera pretraživač na ponovno izračunavanje
+                grid.offsetHeight;
+                debugLog('🔧 Layout reflow forsiran');
+            }
+            // Opcionalno, može pomoći da se trigeruje i resize event
+            window.dispatchEvent(new Event('resize'));
+        });
+
+        // ZAMIJENI stare tooltip event listener-e sa modal sistemom
+        initializeSupplementCards();
 
     }).catch(error => {
         console.error('❌ Greška pri učitavanju modula:', error);
-        // Fallback na osnovni sistem
-        if (typeof initializeSupplementPlanner === 'function') {
-            initializeSupplementPlanner();
-        }
+        debugLog('🔄 Pokušavam fallback inicijalizaciju...');
+
+        // Fallback: Pokušaj ručnu inicijalizaciju
+        setTimeout(() => {
+            try {
+                if (typeof window.SupplementPlanner !== 'undefined') {
+                    debugLog('✅ Koristim globalnu SupplementPlanner klasu');
+                    window.supplementPlanner = new window.SupplementPlanner();
+                } else {
+                    debugLog('❌ Nema dostupne SupplementPlanner klase');
+                    // Show error message in the container
+                    const container = document.getElementById('supplement-planner');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="error-state">
+                                <div class="error-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <h3>Greška pri učitavanju</h3>
+                                <p>Supplement Planner se nije mogao učitati. Pokušajte refresh stranice.</p>
+                                <button onclick="location.reload()" class="retry-btn">
+                                    <i class="fas fa-redo"></i> Osveži stranicu
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (fallbackError) {
+                console.error('❌ Fallback inicijalizacija takođe nije uspjela:', fallbackError);
+            }
+        }, 1000); // Wait 1 second before fallback
     });
 
     // Zatraži dozvolu za notifikacije
@@ -186,13 +249,25 @@ function waitForModules() {
         const checkModules = () => {
             attempts++;
 
-            if (typeof detailedSupplements !== 'undefined' && typeof AdvancedSupplementManager !== 'undefined') {
-                console.log('✅ detailedSupplements i AdvancedSupplementManager učitani');
+            debugLog(`🔍 Pokušaj ${attempts}/50 - Čekam module:`);
+            debugLog(`   - SUPPLEMENTS_DATA: ${typeof SUPPLEMENTS_DATA !== 'undefined' ? '✅' : '❌'}`);
+            debugLog(`   - window.SUPPLEMENTS_DATA: ${typeof window.SUPPLEMENTS_DATA !== 'undefined' ? '✅' : '❌'}`);
+            debugLog(`   - window.SupplementPlanner: ${typeof window.SupplementPlanner !== 'undefined' ? '✅' : '❌'}`);
+            debugLog(`   - detailedSupplements: ${typeof detailedSupplements !== 'undefined' ? '✅' : '❌'}`);
+
+            // Check both ES6 imports and global variables
+            const hasData = typeof SUPPLEMENTS_DATA !== 'undefined' || typeof window.SUPPLEMENTS_DATA !== 'undefined';
+            const hasPlanner = typeof window.SupplementPlanner !== 'undefined';
+
+            if (hasData && hasPlanner) {
+                debugLog('🎉 SVI MODULI UČITANI - pokretam SupplementPlanner!');
                 resolve();
             } else if (attempts >= maxAttempts) {
+                debugLog('❌ Timeout: Moduli se nisu učitali u roku od 5 sekundi');
+                debugLog('📊 Final status - Data:', hasData, 'Planner:', hasPlanner);
                 reject(new Error('Timeout: Moduli se nisu učitali u roku od 5 sekundi'));
             } else {
-                console.log(`⏳ Čekam učitavanje modula... (${attempts}/${maxAttempts})`);
+                debugLog(`⏳ Čekam učitavanje modula... (${attempts}/${maxAttempts})`);
                 setTimeout(checkModules, 100);
             }
         };
@@ -201,123 +276,62 @@ function waitForModules() {
     });
 }
 
-// NOVA FUNKCIJA: Ažuriraj dnevni prikaz sa tooltip podrškom
-function updateDailySupplementsWithTooltips() {
-    const dailyContainer = document.querySelector('#danasnji-plan-container .supplements-grid');
-    if (dailyContainer && typeof detailedSupplements !== 'undefined') {
-        console.log('🔄 Ažuriram dnevni prikaz sa tooltip podrškom');
-        dailyContainer.innerHTML = generateSupplementCardsHTML();
-    }
+// UKLONJENA FUNKCIJA: updateDailySupplementsWithTooltips  
+// Razlog: Nova SupplementPlanner klasa preuzima potpunu kontrolu nad supplement prikauom
+function updateDailySupplementsWithTooltips_DEPRECATED() {
+    console.warn('⚠️ updateDailySupplementsWithTooltips pozvan - DEPRECATED! Koristi SupplementPlanner umesto toga');
+    // Funkcija onemogućena - SupplementPlanner preuzima kontrolu
 }
 
-// NOVA FUNKCIJA: Globalni tooltip event listeners
-function initializeGlobalTooltips() {
-    let currentTooltip = null;
-    let tooltipTimeout = null;
-
-    // Mouseenter sa debouncing
-    document.addEventListener('mouseenter', function(e) {
-        const target = e.target.closest('.tooltip-trigger');
-        if (target && target.classList && target.classList.contains('tooltip-trigger')) {
-            clearTimeout(tooltipTimeout);
-            tooltipTimeout = setTimeout(() => {
-                showGlobalTooltip(target);
-            }, 100);
-        }
-    }, true);
-
-    // Mouseleave sa delay
-    document.addEventListener('mouseleave', function(e) {
-        const target = e.target.closest('.tooltip-trigger');
-        if (target && target.classList && target.classList.contains('tooltip-trigger')) {
-            clearTimeout(tooltipTimeout);
-            tooltipTimeout = setTimeout(() => {
-                hideGlobalTooltip();
-            }, 150);
-        }
-    }, true);
-
-    // Click-outside za tooltip
+// NOVA FUNKCIJA: Supplement cards modal handling
+function initializeSupplementCards() {
+    debugLog('🎯 Inicijalizujem supplement card handlers');
+    
+    // Event delegation za "Detalji" dugmad - SIGURNO
     document.addEventListener('click', function(e) {
-        if (currentTooltip && e.target && e.target.nodeType === 1 && !currentTooltip.contains(e.target) && 
-            (!e.target.classList || !e.target.classList.contains('tooltip-trigger'))) {
-            hideGlobalTooltip();
+        const button = e.target.closest('.details-btn');
+        if (button) {
+            e.preventDefault();
+            const supplementId = button.dataset.supplement;
+            
+            debugLog('🔍 Klik na Detalji za:', supplementId);
+            
+            if (supplementId && window.supplementModal) {
+                window.supplementModal.show(supplementId);
+            }
         }
     });
 
-    function showGlobalTooltip(trigger) {
-        hideGlobalTooltip(); // Sakrij postojeći
-
-        const card = trigger.closest('.supplement-card');
-        const tooltip = card?.querySelector('.supplement-tooltip');
-
-        if (!tooltip) {
-            console.warn('No tooltip found for supplement:', trigger.dataset.supplement);
-            return;
+    // Event delegation za "Uzeto danas" dugmad - SIGURNO
+    document.addEventListener('click', function(e) {
+        const button = e.target.closest('.taken-today-btn');
+        if (button) {
+            e.preventDefault();
+            const supplementId = button.dataset.supplement;
+            
+            debugLog('✅ Klik na Uzeto danas za:', supplementId);
+            
+            if (supplementId) {
+                toggleSupplementTaken(supplementId, button);
+            }
         }
+    });
+}
 
-        // Popuni tooltip sadržaj
-        const supplementId = trigger.dataset.supplement;
-        if (typeof detailedSupplements !== 'undefined' && detailedSupplements[supplementId]) {
-            const supplement = detailedSupplements[supplementId];
-            tooltip.innerHTML = `
-                <h4 class="font-bold text-cyan-400 mb-2">${supplement.name}</h4>
-                <p class="text-sm text-gray-300 mb-2"><strong>Brend:</strong> ${supplement.brand}</p>
-                <p class="text-sm text-gray-300 mb-2"><strong>Benefiti:</strong> ${supplement.benefits}</p>
-                <p class="text-sm text-gray-300 mb-2"><strong>Napomene:</strong> ${supplement.notes}</p>
-                <p class="text-sm text-amber-300"><strong>Interakcije:</strong> ${supplement.interactions}</p>
-            `;
-        }
-
-    // Pozicioniranje sa viewport bounds checking
-    const rect = trigger.getBoundingClientRect();
-
-    // Temporary show za tačne dimenzije
-    tooltip.style.visibility = 'hidden';
-    tooltip.style.display = 'block';
-    tooltip.classList.remove('hidden');
-
-    const tooltipRect = tooltip.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-
-    // Kalkulacija pozicije - koristi samo viewport koordinate za position: fixed
-    let top = rect.bottom + 8;
-    let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
-
-    // Horizontalno pozicioniranje sa padding-om
-    const padding = 15;
-    if (left < padding) {
-        left = padding;
-    } else if (left + tooltipRect.width > viewportWidth - padding) {
-        left = viewportWidth - tooltipRect.width - padding;
-    }
-
-    // Vertikalno pozicioniranje - ako izlazi van viewport-a, prikaži iznad
-    if (top + tooltipRect.height > viewportHeight - padding) {
-        top = rect.top - tooltipRect.height - 8;
-        // Dodatna provjera da ne ide iznad viewport-a
-        if (top < padding) {
-            top = padding;
-        }
-    }        // Konačno pozicioniranje
-        tooltip.style.position = 'fixed';
-        tooltip.style.top = Math.round(top) + 'px';
-        tooltip.style.left = Math.round(left) + 'px';
-        tooltip.style.zIndex = '9999';
-        tooltip.style.visibility = 'visible';
-
-        currentTooltip = tooltip;
-
-        console.log(`[GLOBAL TOOLTIP] Positioned at: ${Math.round(left)}px, ${Math.round(top)}px (viewport: ${viewportWidth}x${viewportHeight})`);
-    }
-
-    function hideGlobalTooltip() {
-        if (currentTooltip) {
-            currentTooltip.classList.add('hidden');
-            currentTooltip.style.display = 'none';
-            currentTooltip = null;
-        }
+function toggleSupplementTaken(supplementId, button) {
+    const current = localStorage.getItem(`taken_${supplementId}`) === 'true';
+    localStorage.setItem(`taken_${supplementId}`, (!current).toString());
+    
+    debugLog('🔄 Toggled taken status for:', supplementId, 'to:', !current);
+    
+    if (!current) {
+        button.classList.add('taken');
+        button.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Uzeto ✓';
+        button.className = button.className.replace('bg-cyan-600', 'bg-green-600');
+    } else {
+        button.classList.remove('taken');
+        button.innerHTML = '<i class="fas fa-check mr-1"></i>Uzeto danas';
+        button.className = button.className.replace('bg-green-600', 'bg-cyan-600');
     }
 }
 
@@ -383,7 +397,33 @@ function showDataInfo() {
             storageData[key] = JSON.parse(data);
         }
     }
-    console.log('localStorage data:', storageData);
+    debugLog('localStorage data:', storageData);
+}
+
+// NOVA FUNKCIJA: Osnovni danas fokus BEZ supplement sekcije
+function initializeTodayFocusBasic(currentDay) {
+    const dayKey = `Dan ${currentDay}`;
+    const todayData = planData[dayKey];
+
+    if (!todayData) {
+        console.warn(`Nema podataka za ${dayKey}`);
+        return;
+    }
+
+    const todayDate = new Date(startDate);
+    todayDate.setDate(startDate.getDate() + currentDay - 1);
+
+    const dateElement = document.getElementById('danasnji-datum');
+    if (dateElement) {
+        dateElement.textContent = `${todayDate.getDate()}.${(todayDate.getMonth() + 1).toString().padStart(2, '0')} | Dan ${currentDay} od 28`;
+    }
+
+    const container = document.getElementById('danasnji-plan-container');
+    if (container) {
+        // Generiši komplet današnji HTML - sada sa loading indikatorom
+        container.innerHTML = generateDayHTML(todayData, currentDay);
+        debugLog('📅 Inicijalizovan osnovni današnji fokus za Dan', currentDay);
+    }
 }
 
 // Utility funkcije
@@ -468,8 +508,11 @@ function generateDayHTML(dayData, dayNumber) {
                     <i class="fas fa-pills section-icon"></i>
                     <h4 class="section-title">Suplementacija</h4>
                 </div>
-                <div class="supplements-grid">
-                    ${generateSupplementCardsHTML()}
+                <div class="supplements-grid" id="daily-supplements-loading">
+                    <div class="loading-placeholder text-center py-8">
+                        <div class="animate-spin inline-block w-6 h-6 border-2 border-cyan-500 border-r-transparent rounded-full mb-2"></div>
+                        <p class="text-gray-400">Učitavam supplement podatke...</p>
+                    </div>
                 </div>
             </div>
 
@@ -548,7 +591,12 @@ function generateWeekDaySummary(dayData, dayNumber) {
                     <h4 class="section-title">Suplementacija</h4>
                 </div>
                 <div class="supplements-grid">
-                    ${generateSupplementCardsHTML()}
+                    <div class="text-center py-4">
+                        <p class="text-gray-400 text-sm">
+                            <i class="fas fa-arrow-up mr-2"></i>
+                            Pogledaj Advanced Supplement Manager iznad za detaljne informacije
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -502,17 +502,21 @@ function generateDayHTML(dayData, dayNumber) {
                     ${generateMealsHTML(dayNumber)}
                 </div>
             </div>
-
             <div class="supplements-section mb-6">
                 <div class="section-header">
                     <i class="fas fa-pills section-icon"></i>
                     <h4 class="section-title">Suplementacija</h4>
                 </div>
-                <div class="supplements-grid" id="daily-supplements-loading">
-                    <div class="loading-placeholder text-center py-8">
-                        <div class="animate-spin inline-block w-6 h-6 border-2 border-cyan-500 border-r-transparent rounded-full mb-2"></div>
-                        <p class="text-gray-400">Učitavam supplement podatke...</p>
-                    </div>
+                <div class="p-4 bg-gray-800/40 rounded-lg text-center border border-gray-700">
+                    <p class="text-gray-300 mb-4">
+                        Svi detalji, praćenje unosa i dnevne doze su u naprednom menadžeru.
+                    </p>
+                    <a href="#supplement-planner" class="cta-button"
+                       role="button"
+                       aria-label="Otvori Advanced Supplement Manager"
+                       onclick="(function(e){ e.preventDefault(); const managerCard = document.querySelector('#supplement-planner').closest('.card'); const accordionBtn = managerCard.querySelector('.accordion-button'); if(accordionBtn && !accordionBtn.classList.contains('open')) { accordionBtn.click(); } managerCard.scrollIntoView({behavior: 'smooth', block: 'center'}); })();">
+                        <i class="fas fa-tasks mr-2"></i>Upravljanje Suplementima
+                    </a>
                 </div>
             </div>
 

@@ -279,23 +279,28 @@ export const DAILY_LIMITS = {
     zinc: { max: 40, warning: 35, unit: 'mg' }
 };
 
-// Kompatibilnost sa starim kodom
+// Kompatibilnost sa starim kodom i osiguravanje globalne dostupnosti
 export const detailedSupplements = getAllSupplements();
 export const timingPeriods = PERIOD_INFO;
 export const dailyLimits = DAILY_LIMITS;
 
-// Eksport za globalni opseg
-window.SUPPLEMENTS_DATA = SUPPLEMENTS_DATA;
-window.detailedSupplements = detailedSupplements;
-window.dailyLimits = DAILY_LIMITS;
-window.getSupplementsByPeriod = getSupplementsByPeriod;
-window.getAllSupplements = getAllSupplements;
-window.getSupplementById = getSupplementById;
-window.PERIOD_INFO = PERIOD_INFO;
+// Eksplicitno eksportuj SVE što je potrebno na globalni 'window' objekat
+if (typeof window !== 'undefined') {
+    window.SUPPLEMENTS_DATA = SUPPLEMENTS_DATA;
+    window.PERIOD_INFO = PERIOD_INFO;
+    window.DAILY_LIMITS = DAILY_LIMITS;
 
-console.log('[DEBUG] 📡 Globalne funkcije eksportovane:', {
-    getSupplementById: typeof window.getSupplementById,
-    getAllSupplements: typeof window.getAllSupplements,
-    getSupplementsByPeriod: typeof window.getSupplementsByPeriod,
-    PERIOD_INFO: typeof window.PERIOD_INFO
-});
+    window.getSupplementById = (id) => {
+        const allSupplements = getAllSupplements();
+        return allSupplements[id] || null;
+    };
+
+    window.getAllSupplements = getAllSupplements;
+    window.getSupplementsByPeriod = getSupplementsByPeriod;
+
+    // Za stari kod koji možda još postoji
+    window.detailedSupplements = detailedSupplements;
+    window.dailyLimits = dailyLimits;
+
+    console.log('[DEBUG] \ud83d\udd34 Globalni supplement podaci i funkcije su uspje\u0161no postavljeni.');
+}

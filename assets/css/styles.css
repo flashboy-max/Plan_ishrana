@@ -3696,3 +3696,64 @@ body {
         padding: 1rem;
     }
 }
+/* ===== FINALNI CSS FIX ZA SUPPLEMENT MANAGER ===== */
+
+/* 1. Kontejner za kartice - Koristimo Grid za responzivnost */
+.supplements-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+    gap: 1.5rem !important;
+    align-items: stretch !important;
+}
+
+/* 2. Sama kartica - Koristimo Flexbox za unutrašnji raspored */
+.supplement-card {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 1.25rem !important;
+    min-height: 250px;
+}
+
+/* 3. Unutrašnji elementi kartice */
+.supplement-header, .supplement-details, .supplement-benefits {
+    flex-shrink: 0;
+}
+
+.supplement-benefits {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.supplement-actions {
+    margin-top: auto;
+    flex-shrink: 0;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.details-btn, .taken-today-btn {
+    flex: 1;
+}
+
+/* CTA Button for Supplement Manager */
+.cta-button {
+    display: inline-block;
+    background: #06b6d4;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #0e7490;
+}
+
+.cta-button:hover {
+    background: #0891b2;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.2);
+}

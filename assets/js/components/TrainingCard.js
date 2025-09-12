@@ -1,4 +1,12 @@
 // TrainingCard.js - Komponenta za trening kartice
+
+// Helper function for debugging
+const debugLog = (message) => {
+    if (window.DEBUG_MODE || true) {
+        console.log(`[DEBUG] ${message}`);
+    }
+};
+
 export class TrainingCard {
     constructor(dayData) {
         this.data = dayData;
@@ -53,9 +61,18 @@ export class TrainingCard {
 
     renderTrainingDay() {
         // Koristi detaljne vježbe iz TRAINING_DATA ako su dostupne
+        debugLog(`🏋️ TrainingCard.renderTrainingDay - day: ${this.data.day}`);
+        debugLog(`🏋️ window.TRAINING_DATA available: ${!!window.TRAINING_DATA}`);
+        
         if (window.TRAINING_DATA) {
             const trainingKey = `dan${this.data.day}`;
             const trainingData = window.TRAINING_DATA[trainingKey];
+            
+            debugLog(`🏋️ Looking for key: ${trainingKey}`);
+            debugLog(`🏋️ Found trainingData: ${!!trainingData}`);
+            if (trainingData) {
+                debugLog(`🏋️ Exercises count: ${trainingData.exercises?.length || 0}`);
+            }
             
             if (trainingData && trainingData.exercises && trainingData.exercises.length > 0) {
                 return `

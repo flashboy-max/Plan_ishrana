@@ -6,7 +6,27 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Aleksandrov 28-dnevni Plan</title>
+        <!-- Training Container -->
+        <div class="card mb-6 sm:mb-8">
+            <button class="accordion-button w-full flex justify-between items-center text-left text-lg sm:text-xl font-semibold text-white mb-4 hover:text-cyan-400 transition-colors">
+                <span class="flex items-center">
+                    <i class="fas fa-dumbbell mr-3 text-cyan-400"></i>Trening Program
+                </span>
+                <i class="fas fa-chevron-down transition-transform duration-300" id="training-chevron"></i>
+            </button>
+            <div class="accordion-content space-y-4">
+                <div class="text-center mb-6">
+                    <p class="text-cyan-300">28-dnevni trening plan sa progresivnim opterećenjem</p>
+                </div>
+                <div id="training-container" class="space-y-6">
+                    <!-- Training content will be loaded here -->
+                    <div class="text-center py-8">
+                        <i class="fas fa-spinner fa-spin text-cyan-400 text-2xl mb-4"></i>
+                        <p class="text-gray-400">Učitavam trening program...</p>
+                    </div>
+                </div>
+            </div>
+        </div>androv 28-dnevni Plan</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
     <script src="debug-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -345,32 +365,41 @@
 
         <!-- Meal Manager Container -->
         <div class="card mb-6 sm:mb-8">
-            <div class="text-center mb-6">
-                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-center">
+            <button class="accordion-button w-full flex justify-between items-center text-left text-lg sm:text-xl font-semibold text-white mb-4 hover:text-green-400 transition-colors">
+                <span class="flex items-center">
                     <i class="fas fa-utensils mr-3 text-green-400"></i>Dnevni Keto Obroci
-                </h2>
-                <p class="text-green-300">Optimizovani obroci sa alternativama i preciznim makronutrijentima</p>
-            </div>
-            <div id="meals-container" class="space-y-6">
-                <!-- Meal content will be loaded here -->
-                <div class="text-center py-8">
-                    <i class="fas fa-spinner fa-spin text-green-400 text-2xl mb-4"></i>
-                    <p class="text-gray-400">Učitavam keto obroce...</p>
+                </span>
+                <i class="fas fa-chevron-down transition-transform duration-300" id="meals-chevron"></i>
+            </button>
+            <div class="accordion-content space-y-4">
+                <div class="text-center mb-6">
+                    <p class="text-green-300">Optimizovani obroci sa alternativama i preciznim makronutrijentima</p>
+                </div>
+                <div id="meals-container" class="space-y-6">
+                    <!-- Meal content will be loaded here -->
+                    <div class="text-center py-8">
+                        <i class="fas fa-spinner fa-spin text-green-400 text-2xl mb-4"></i>
+                        <p class="text-gray-400">Učitavam keto obroce...</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Gamification Dashboard -->
         <div class="card mb-6 sm:mb-8">
-            <div class="text-center mb-6">
-                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-center">
+            <button class="accordion-button w-full flex justify-between items-center text-left text-lg sm:text-xl font-semibold text-white mb-4 hover:text-yellow-400 transition-colors">
+                <span class="flex items-center">
                     <i class="fas fa-trophy mr-3 text-yellow-400"></i>Napredak i Postignuća
-                </h2>
-                <p class="text-cyan-300">Tvoj XP, level i postignuća</p>
-            </div>
-            
-            <!-- Gamification Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                </span>
+                <i class="fas fa-chevron-down transition-transform duration-300" id="progress-chevron"></i>
+            </button>
+            <div class="accordion-content space-y-4">
+                <div class="text-center mb-6">
+                    <p class="text-cyan-300">Tvoj XP, level i postignuća</p>
+                </div>
+                
+                <!-- Gamification Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <!-- XP and Level -->
                 <div class="bg-gradient-to-br from-yellow-600 to-orange-600 rounded-lg p-4 text-white">
                     <div class="flex items-center justify-between mb-2">
@@ -417,28 +446,33 @@
                 </div>
             </div>
             
-            <!-- Recent Achievements -->
-            <div id="recent-achievements" class="hidden">
-                <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
-                    <i class="fas fa-trophy text-yellow-400 mr-2"></i>Nedavna Postignuća
-                </h3>
-                <div id="achievements-list" class="space-y-2">
-                    <!-- Achievements will be populated here -->
+                <!-- Recent Achievements -->
+                <div id="recent-achievements" class="hidden">
+                    <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+                        <i class="fas fa-trophy text-yellow-400 mr-2"></i>Nedavna Postignuća
+                    </h3>
+                    <div id="achievements-list" class="space-y-2">
+                        <!-- Achievements will be populated here -->
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Checklist Container -->
         <div class="card mb-6 sm:mb-8">
-            <div class="text-center mb-6">
-                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-center">
+            <button class="accordion-button w-full flex justify-between items-center text-left text-lg sm:text-xl font-semibold text-white mb-4 hover:text-cyan-400 transition-colors">
+                <span class="flex items-center">
                     <i class="fas fa-list-check mr-3 text-cyan-400"></i>Dnevni Checklist
-                </h2>
-                <p class="text-cyan-300">Prati svoj napredak kroz dnevne zadatke</p>
-            </div>
+                </span>
+                <i class="fas fa-chevron-down transition-transform duration-300" id="checklist-chevron"></i>
+            </button>
+            <div class="accordion-content space-y-4">
+                <div class="text-center mb-6">
+                    <p class="text-cyan-300">Prati svoj napredak kroz dnevne zadatke</p>
+                </div>
 
-            <!-- Gamification Dashboard -->
-            <div id="gamification-dashboard" class="mb-6 bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl p-4 border border-purple-500/30">
+                <!-- Gamification Dashboard -->
+                <div id="gamification-dashboard" class="mb-6 bg-gradient-to-r from-indigo-900/50 to-purple-900/50 rounded-xl p-4 border border-purple-500/30">
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <!-- XP and Level Display -->
                     <div class="flex items-center gap-4">
@@ -474,11 +508,12 @@
                 </div>
             </div>
 
-            <div id="checklist-container" class="space-y-6">
-                <!-- Checklist content will be loaded here -->
-                <div class="text-center py-8">
-                    <i class="fas fa-tasks text-cyan-400 text-2xl mb-4"></i>
-                    <p class="text-gray-400">Učitavam checklist...</p>
+                <div id="checklist-container" class="space-y-6">
+                    <!-- Checklist content will be loaded here -->
+                    <div class="text-center py-8">
+                        <i class="fas fa-tasks text-cyan-400 text-2xl mb-4"></i>
+                        <p class="text-gray-400">Učitavam checklist...</p>
+                    </div>
                 </div>
             </div>
         </div>

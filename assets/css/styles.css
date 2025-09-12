@@ -4272,7 +4272,6 @@ body {
     margin: 2px;
     box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
 }
-}
 
 /* ===== WEEKLY OVERVIEW TRAINING STILOVI ===== */
 
@@ -4498,4 +4497,131 @@ body {
 .achievement-badge.locked {
     background: linear-gradient(135deg, #374151, #4b5563);
     color: #9ca3af;
+}
+
+/* ===== COLLAPSIBLE ACCORDION STYLES ===== */
+
+/* Accordion Button Styles */
+.accordion-button {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.1));
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.accordion-button:hover {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(59, 130, 246, 0.15));
+    border-color: rgba(6, 182, 212, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
+}
+
+.accordion-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.accordion-button:hover::before {
+    left: 100%;
+}
+
+/* Active state */
+.accordion-button.active {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.2));
+    border-color: rgba(6, 182, 212, 0.6);
+}
+
+/* Accordion Content Styles */
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0 1.5rem;
+}
+
+.accordion-content.open {
+    max-height: 3000px; /* Adjust based on content */
+    padding: 1.5rem;
+}
+
+/* Chevron Animation */
+.accordion-button .fas {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-button.active .fas {
+    transform: rotate(180deg);
+}
+
+/* Section-specific colors */
+.accordion-button:hover.training {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15));
+    border-color: rgba(34, 197, 94, 0.5);
+}
+
+.accordion-button:hover.meals {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15));
+    border-color: rgba(34, 197, 94, 0.5);
+}
+
+.accordion-button:hover.progress {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.15));
+    border-color: rgba(251, 191, 36, 0.5);
+}
+
+.accordion-button:hover.checklist {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(59, 130, 246, 0.15));
+    border-color: rgba(6, 182, 212, 0.5);
+}
+
+/* Smooth animations */
+.accordion-content {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover effects */
+.accordion-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.2);
+}
+
+/* Mobile responsive accordion */
+@media (max-width: 640px) {
+    .accordion-button {
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .accordion-content {
+        padding: 0 1rem;
+    }
+    
+    .accordion-content.open {
+        padding: 1rem;
+    }
+}
+
+/* Accessibility improvements */
+.accordion-button:focus {
+    outline: 2px solid rgba(6, 182, 212, 0.7);
+    outline-offset: 2px;
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .accordion-button,
+    .accordion-content,
+    .accordion-button .fas {
+        transition: none;
+    }
 }

@@ -70,6 +70,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         debugLog('✅ Modal system initialized');
     }
 
+    // Initialize collapsible sections
+    initializeCollapsibleSections();
+    debugLog('✅ Collapsible sections initialized');
+
     // Initialize legacy functions for accordion and weekly content
     initializeAccordion();
     
@@ -525,4 +529,60 @@ function getCurrentDay() {
     const today = new Date();
     const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
     return Math.min(Math.max(diffDays, 1), 28);
+}
+
+// ===== COLLAPSIBLE ACCORDION FUNCTIONALITY =====
+function initializeCollapsibleSections() {
+    debugLog('🎯 Initializing collapsible sections');
+
+    // Event delegation za sve accordion dugmad
+    document.addEventListener('click', function(e) {
+        const button = e.target.closest('.accordion-button');
+        if (!button) return;
+
+        e.preventDefault();
+
+        const content = button.nextElementSibling;
+        const chevron = button.querySelector('.fas');
+        const isOpen = content.classList.contains('open');
+
+        debugLog(`🔄 Toggling section: ${button.textContent.trim()}`);
+
+        // Opcionalno: Zatvori sve ostale sekcije (single-open mode)
+        // Ukloni ovaj dio ako želiš da se više sekcija može otvoriti istovremeno
+        /*
+        document.querySelectorAll('.accordion-content').forEach(otherContent => {
+            if (otherContent !== content) {
+                otherContent.classList.remove('open');
+                const otherButton = otherContent.previousElementSibling;
+                const otherChevron = otherButton.querySelector('.fas');
+                if (otherChevron) {
+                    otherChevron.classList.remove('rotate-180');
+                }
+                otherButton.classList.remove('active');
+            }
+        });
+        */
+
+        // Toggle trenutne sekcije
+        if (isOpen) {
+            content.classList.remove('open');
+            button.classList.remove('active');
+            debugLog(`📉 Closed section: ${button.textContent.trim()}`);
+        } else {
+            content.classList.add('open');
+            button.classList.add('active');
+            debugLog(`📈 Opened section: ${button.textContent.trim()}`);
+        }
+    });
+
+    // Set default state - možeš da promjeniš koji su otvoreni po defaultu
+    setTimeout(() => {
+        // Otvori Trening Program po defaultu
+        const trainingButton = document.querySelector('#training-chevron')?.closest('.accordion-button');
+        if (trainingButton) {
+            trainingButton.click();
+            debugLog('🏋️ Auto-opened Training Program section');
+        }
+    }, 500);
 }

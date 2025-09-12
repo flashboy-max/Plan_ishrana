@@ -130,7 +130,38 @@ export const SUPPLEMENTS_DATA = {
 
     // POST-WORKOUT (odmah nakon treninga)
     postWorkout: {
-        // Trenutno prazno - može se dodati ako bude potrebe
+        'hydration': {
+            id: 'hydration',
+            name: 'Hydration+',
+            brand: 'Applied Nutrition',
+            dosage: '500ml vode',
+            frequency: 'Nakon treninga',
+            priority: 1,
+            fastingSafe: false,
+            breaksFast: true,
+            category: 'recovery',
+            benefits: 'Brza rehidracija nakon treninga. Elektroliti za oporavak.',
+            notes: 'Odmah nakon treninga za optimalnu rehidraciju i oporavak.',
+            interactions: 'Sadrži magnesium i vitamin C - uračunaj u dnevnu dozu',
+            minerals: { magnesium: 50, vitaminC: 250, sodium: 200, potassium: 150 },
+            macros: { protein: 0, fat: 0, carbs: 8 }
+        },
+        'protein': {
+            id: 'protein',
+            name: 'Whey Protein Isolate',
+            brand: 'Generic',
+            dosage: '30g',
+            frequency: '30min nakon treninga',
+            priority: 1,
+            fastingSafe: false,
+            breaksFast: true,
+            category: 'recovery',
+            benefits: 'Brz oporavak mišića nakon treninga. Visokokvalitetni protein.',
+            notes: 'Uzeti sa vodom ili mlijekom u roku od 30-60min nakon treninga.',
+            interactions: 'Nema poznatih interakcija.',
+            minerals: {},
+            macros: { protein: 25, fat: 1, carbs: 3 }
+        }
     },
 
     // MEAL 2 (sa drugim obrokom)
@@ -297,5 +328,6 @@ console.log('[DEBUG] 📡 Globalne funkcije eksportovane:', {
     getSupplementById: typeof window.getSupplementById,
     getAllSupplements: typeof window.getAllSupplements,
     getSupplementsByPeriod: typeof window.getSupplementsByPeriod,
-    PERIOD_INFO: typeof window.PERIOD_INFO
+    PERIOD_INFO: typeof window.PERIOD_INFO,
+    DAILY_LIMITS: typeof window.DAILY_LIMITS
 });

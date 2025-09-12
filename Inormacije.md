@@ -9,7 +9,7 @@ dob: "1984-04-12"
 godine: 41
 visina_cm: 181
 tezina_start_kg: 101
-datum_pocetka_plana: "2025-09-11"
+datum_pocetka_plana: "2025-09-14"
 rezim: "Keto + IF 18/6"
 deficit: "10–15% ispod TDEE"
 aktivnost_bazna: "~7000 koraka/dan (nisko → umjereno aktivan)"
@@ -72,6 +72,28 @@ san: "7–8 h/noć"
 | **NMN** | 250 mg kaps | 250–500 mg | ujutro, prazan stomak | Opciono. |
 | **MCT C8** | — | 1 kašičica → 1 sup. kašika | ujutro / pre aktivnosti | Opciono za energiju. |
 | **Lipo Intense** | — | po uputstvu | jutro | Opciono za energiju. |
+
+## 5.1) Suplementacija - Izabrani Protocol
+
+### Izabrani Protocol
+- **Tip:** Simple (Početni)
+- **Troškovi:** €65/mesec (procena)
+- **Početak:** 2025-09-14
+- **Link:** [suplementi_simple.md](suplementi_simple.md) | [suplementi_advanced.md](suplementi_advanced.md)
+
+### Trenutni Suplementi (Simple Protocol)
+- [ ] CreGAAtine - energija i snaga
+- [ ] Hydration+ - elektroliti i hidratacija
+- [ ] Collagen - oporavak tetive/zglobova
+- [ ] Magnesium - san i opuštanje
+- [ ] D3+K2 - imunitet i kosti
+- [ ] Omega-3 - anti-upala
+
+### Tracking
+- **Poslednja analiza:** N/A (baseline predstoji)
+- **Vitamin D nivo:** N/A (cilj: 30-50 ng/ml)
+- **Magnezijum nivo:** N/A (cilj: 1.8-2.6 mg/dl)
+- **Napomene:** Planirana baseline analiza pre početka protokola
 
 ## 6) Trening – princip i ograničenja (sažetak)
 - **Raspored:** **PON/SRI/PET** full-body; **UTO/ČET/SUB** kratka rehab/mobilnost; **NED** odmor/šetnja.

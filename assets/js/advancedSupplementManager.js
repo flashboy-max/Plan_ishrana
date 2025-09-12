@@ -166,6 +166,8 @@ class SupplementPlanner {
     renderInterface() {
         if (!this.container) return;
 
+        debugLog('🎨 Početak renderInterface() za period:', this.currentPeriod);
+
         // Koristi globalne funkcije i podatke
         let periodSupplements = {};
         if (window.getSupplementsByPeriod) {
@@ -178,6 +180,9 @@ class SupplementPlanner {
             debugLog('❌ Nema dostupnih podataka za period:', this.currentPeriod);
         }
         const supplementIds = Object.keys(periodSupplements);
+
+        debugLog('📊 Pronađeno suplementa za period:', supplementIds.length);
+        debugLog('📋 Suplementi:', supplementIds);
 
         // Generiraj kartice sa stabilnim ključevima
         const supplementCards = supplementIds
@@ -454,7 +459,8 @@ class SupplementPlanner {
 
         return minerals.map(mineral => {
             const current = this.mineralsTracker[mineral] || 0;
-            const limit = DAILY_LIMITS[mineral];
+            // Koristi window.DAILY_LIMITS ili fallback vrijednosti
+            const limit = window.DAILY_LIMITS ? window.DAILY_LIMITS[mineral] : null;
             const percentage = limit ? Math.min((current / limit.max) * 100, 100) : 0;
             const isWarning = limit && current >= limit.warning;
             const isOver = limit && current >= limit.max;
@@ -501,6 +507,11 @@ class SupplementPlanner {
         debugLog('🔄 SupplementPlanner refresh complete');
     }
 
+    // Check if planner is ready
+    isReady() {
+        return this.initializationComplete;
+    }
+
     destroy() {
         this.invalidateCache();
         if (this.container) {
@@ -531,6 +542,13 @@ export { SupplementPlanner };
 // Napravi SupplementPlanner dostupnom globalno za main.js
 if (typeof window !== 'undefined') {
     window.SupplementPlanner = SupplementPlanner;
+    window.SupplementManager = SupplementPlanner; // ALIAS za main.js kompatibilnost
+
+    // Kreiraj globalnu instancu
+    window.supplementPlanner = new SupplementPlanner();
+    window.supplementManager = window.supplementPlanner; // ALIAS
+
+    debugLog('📡 SupplementPlanner instanca kreirana i dostupna kao supplementManager');
 }
 
 // Auto-initialize when DOM is ready - REMOVED to prevent race condition with main.js

@@ -11,7 +11,6 @@ export class SupplementManager {
         this.isInitialized = false;
 
         // Komponente
-        this.periodManager = new PeriodManager();
         this.dataManager = new DataManager();
         this.eventHandler = null; // Inicijalizuje se kasnije
         this.cardManager = new SupplementCardManager();
@@ -45,7 +44,7 @@ export class SupplementManager {
             await this.waitForData();
 
             // Inicijalizuj komponente
-            this.currentPeriod = this.periodManager.getCurrentPeriod();
+            this.currentPeriod = PeriodManager.getCurrentPeriod();
             this.eventHandler = new EventHandler(this);
 
             // Renderuj interface
@@ -60,6 +59,9 @@ export class SupplementManager {
 
             this.isInitialized = true;
 
+            // Export global functions for modal compatibility
+            this.exportGlobalFunctions();
+
             debugLog('[SupplementManager] ✅ Inicijalizacija završena');
 
         } catch (error) {
@@ -70,27 +72,37 @@ export class SupplementManager {
 
     // Čekaj da se podaci učitaju
     async waitForData() {
-        return new Promise((resolve, reject) => {
-            let attempts = 0;
-            const maxAttempts = 50;
+        return new Promise((resolve) => {
+            debugLog('🔍 Čekam učitavanje podataka...');
 
             const checkData = () => {
-                attempts++;
+                const hasSupplements = typeof window.SUPPLEMENTS_DATA !== 'undefined' ||
+                                     (typeof window.getAllSupplements === 'function' && window.getAllSupplements());
+                const hasDetailed = typeof window.detailedSupplements !== 'undefined';
+                const hasPeriodInfo = typeof window.PERIOD_INFO !== 'undefined';
 
-                if (typeof window.SUPPLEMENTS_DATA !== 'undefined' &&
-                    typeof window.PERIOD_INFO !== 'undefined' &&
-                    typeof window.DAILY_LIMITS !== 'undefined') {
+                debugLog('📊 Status podataka:', {
+                    SUPPLEMENTS_DATA: typeof window.SUPPLEMENTS_DATA,
+                    getAllSupplements: typeof window.getAllSupplements,
+                    detailedSupplements: typeof window.detailedSupplements,
+                    PERIOD_INFO: typeof window.PERIOD_INFO,
+                    hasData: hasSupplements || hasDetailed
+                });
+
+                if ((hasSupplements || hasDetailed) && hasPeriodInfo) {
+                    debugLog('🎉 Podaci dostupni - nastavljam!');
                     resolve();
-                    return;
+                } else {
+                    debugLog('⏳ Čekam podatke...');
+                    setTimeout(checkData, 100);
                 }
-
-                if (attempts >= maxAttempts) {
-                    reject(new Error('Timeout: Podaci se nisu učitali'));
-                    return;
-                }
-
-                setTimeout(checkData, 50);
             };
+
+            // Timeout nakon 3 sekunde
+            setTimeout(() => {
+                debugLog('⚠️ Timeout - nastavljam bez nekih podataka');
+                resolve();
+            }, 3000);
 
             checkData();
         });
@@ -157,7 +169,7 @@ export class SupplementManager {
             .join('');
 
         // Period info
-        const periodInfo = this.periodManager.getPeriodInfo(this.currentPeriod);
+        const periodInfo = PeriodManager.getPeriodInfo(this.currentPeriod);
 
         // Renderuj kompletan interface
         this.container.innerHTML = `
@@ -182,8 +194,8 @@ export class SupplementManager {
 
     // Render period header
     renderPeriodHeader(periodInfo) {
-        const prevPeriod = this.periodManager.getPreviousPeriod(this.currentPeriod);
-        const nextPeriod = this.periodManager.getNextPeriod(this.currentPeriod);
+        const prevPeriod = PeriodManager.getPreviousPeriod(this.currentPeriod);
+        const nextPeriod = PeriodManager.getNextPeriod(this.currentPeriod);
 
         return `
             <div class="period-header">
@@ -275,7 +287,7 @@ export class SupplementManager {
 
     // NAVIGACIJA IZMJEDU PERIODA
     changePeriod(direction) {
-        const periods = this.periodManager.getAllPeriods();
+        const periods = PeriodManager.getAllPeriods();
         const currentIndex = periods.indexOf(this.currentPeriod);
         const newIndex = (currentIndex + direction + periods.length) % periods.length;
 
@@ -352,8 +364,14 @@ export class SupplementManager {
             return;
         }
 
-        // Implementacija modala će biti dodana kasnije
         console.log('[SupplementManager] Detalji za:', supplement);
+
+        // Pozovi modal sistem
+        if (window.supplementModal) {
+            window.supplementModal.show(supplementId);
+        } else {
+            console.error('[SupplementManager] ❌ Modal sistem nije inicijalizovan');
+        }
     }
 
     // PUBLIC API
@@ -396,6 +414,21 @@ export class SupplementManager {
 
     isReady() {
         return this.isInitialized;
+    }
+
+    // Export global functions for modal system compatibility
+    exportGlobalFunctions() {
+        // Export getSupplementById for modal system
+        window.getSupplementById = (id) => {
+            return this.dataManager.getSupplementById(id);
+        };
+
+        // Export getAllSupplements for modal system
+        window.getAllSupplements = () => {
+            return this.dataManager.getAllSupplements();
+        };
+
+        debugLog('🌍 Global functions exported for modal compatibility');
     }
 }
 

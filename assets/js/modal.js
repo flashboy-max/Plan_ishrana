@@ -1,5 +1,12 @@
 // Modal sistem za supplement detalje i alternativne obroke
 
+// Debug helper function
+function debugLog(...args) {
+    if (typeof window !== 'undefined' && window.debugMode) {
+        console.log('%c[MODAL]', 'color: #ff6b6b; font-weight: bold;', ...args);
+    }
+}
+
 class SupplementModal {
     constructor() {
         this.modal = null;

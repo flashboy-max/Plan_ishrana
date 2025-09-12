@@ -287,6 +287,40 @@
             </div>
         </div>
 
+        <!-- Training Manager Container -->
+        <div class="card mb-6 sm:mb-8">
+            <div class="text-center mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-center">
+                    <i class="fas fa-dumbbell mr-3 text-cyan-400"></i>Trening Program
+                </h2>
+                <p class="text-cyan-300">28-dnevni trening plan sa progresivnim opterećenjem</p>
+            </div>
+            <div id="training-container" class="space-y-6">
+                <!-- Training content will be loaded here -->
+                <div class="text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-cyan-400 text-2xl mb-4"></i>
+                    <p class="text-gray-400">Učitavam trening program...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist Container -->
+        <div class="card mb-6 sm:mb-8">
+            <div class="text-center mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-center">
+                    <i class="fas fa-list-check mr-3 text-cyan-400"></i>Dnevni Checklist
+                </h2>
+                <p class="text-cyan-300">Prati svoj napredak kroz dnevne zadatke</p>
+            </div>
+            <div id="checklist-container" class="space-y-6">
+                <!-- Checklist content will be loaded here -->
+                <div class="text-center py-8">
+                    <i class="fas fa-tasks text-cyan-400 text-2xl mb-4"></i>
+                    <p class="text-gray-400">Učitavam checklist...</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Sedmični Pregled (Accordion) -->
         <div>
             <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 text-center flex items-center justify-center">
@@ -388,11 +422,12 @@
     </div>
 
     <!-- Load Data Files -->
-    <script src="assets/data/supplements.js"></script>
-    <script src="assets/data/meals.js"></script>
-    <script src="assets/data/planData.js"></script>
-    <script type="module" src="assets/data/supplementPlanner.js"></script>
-    <script type="module" src="assets/data/detailedSupplements.js"></script>
+    <script src="assets/data/supplements/supplements.js"></script>
+    <script src="assets/data/meals/meals.js"></script>
+    <script type="module" src="assets/data/plan/planData.js"></script>
+    <script type="module" src="assets/data/supplements/supplementPlanner.js"></script>
+    <script type="module" src="assets/data/supplements/detailedSupplements.js"></script>
+    <script type="module" src="assets/data/training/trainingData.js"></script>
     
     <!-- SUPPLEMENT DETAILS MODAL -->
     <div id="supplementModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -465,23 +500,22 @@
     <!-- Load JavaScript Modules -->
     <!-- <script src="assets/js/tooltip.js"></script> --> <!-- ISKLJUČENO: Koristi se NOVI SupplementManager -->
 
-    <!-- DEBUG: Privremeno komentarišem NOVI modularni sistem -->
-    <!--
-    <script type="module" src="assets/js/PeriodManager.js"></script>
-    <script type="module" src="assets/js/DataManager.js"></script>
-    <script type="module" src="assets/js/EventHandler.js"></script>
-    <script type="module" src="assets/js/SupplementCard.js"></script>
-    <script type="module" src="assets/js/SupplementManager.js"></script>
-    -->
+    <!-- Load Component Modules -->
+    <script type="module" src="assets/js/components/PeriodManager.js"></script>
+    <script type="module" src="assets/js/components/DataManager.js"></script>
+    <script type="module" src="assets/js/components/EventHandler.js"></script>
+    <script type="module" src="assets/js/components/SupplementCard.js"></script>
+    <script type="module" src="assets/js/components/TrainingCard.js"></script>
+    <script type="module" src="assets/js/components/TrainingManager.js"></script>
+    <script type="module" src="assets/js/components/SupplementManager.js"></script>
 
-    <!-- OSTALI MODULI -->
+    <!-- Load Other Modules -->
     <script src="assets/js/modal.js"></script>
     <script src="assets/js/progress.js"></script>
     <script src="assets/js/checklist.js"></script>
-    <script src="assets/js/ifTimer.js"></script>
-    <script type="module" src="assets/js/supplementPlanner.js"></script>
+    <script type="module" src="assets/js/components/ifTimer.js"></script>
     <script type="module" src="assets/js/advancedSupplementManager.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
 
 </body>
 </html>

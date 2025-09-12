@@ -125,3 +125,5 @@ function resetIFTimer() {
     }
     initializeIFTimer();
 }
+
+export { initializeIFTimer, updateIFTimer, resetIFTimer };

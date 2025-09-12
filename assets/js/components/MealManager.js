@@ -8,6 +8,15 @@ export class MealManager {
         this.data = mealsData;
         this.currentDay = this.getCurrentDay();
         this.currentMeal = 'obrok1'; // 'obrok1' or 'obrok2'
+        
+        // Listen for day changes from other managers
+        window.addEventListener('dayChanged', (event) => {
+            if (event.detail.source !== 'MealManager') {
+                debugLog(`[MealManager] Day changed by ${event.detail.source} to day ${event.detail.day}`);
+                this.currentDay = event.detail.day;
+                this.renderCurrentMeal();
+            }
+        });
     }
 
     init() {
@@ -121,43 +130,30 @@ export class MealManager {
     }
 
     setupCardEventListeners() {
-        // Navigation buttons
-        const prevBtn = this.container.querySelector('.prev-meal');
-        const nextBtn = this.container.querySelector('.next-meal');
-        const meal1Btn = this.container.querySelector('.meal-switch-btn[data-meal="obrok1"]');
-        const meal2Btn = this.container.querySelector('.meal-switch-btn[data-meal="obrok2"]');
+        // Use event delegation for better mobile compatibility
+        this.container.addEventListener('click', (e) => {
+            const target = e.target.closest('button');
+            if (!target) return;
 
-        if (prevBtn) {
-            prevBtn.addEventListener('click', (e) => {
-                e.preventDefault();
+            e.preventDefault();
+
+            if (target.classList.contains('prev-meal')) {
                 debugLog('[MealManager] 🔄 Previous button clicked');
                 this.handleNavigation(-1);
-            });
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', (e) => {
-                e.preventDefault();
+            } else if (target.classList.contains('next-meal')) {
                 debugLog('[MealManager] 🔄 Next button clicked');
                 this.handleNavigation(1);
-            });
-        }
-
-        if (meal1Btn) {
-            meal1Btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                debugLog('[MealManager] 🔄 Meal 1 button clicked');
-                this.switchMeal('obrok1');
-            });
-        }
-
-        if (meal2Btn) {
-            meal2Btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                debugLog('[MealManager] 🔄 Meal 2 button clicked');
-                this.switchMeal('obrok2');
-            });
-        }
+            } else if (target.classList.contains('meal-switch-btn')) {
+                const mealType = target.getAttribute('data-meal');
+                if (mealType === 'obrok1') {
+                    debugLog('[MealManager] 🔄 Meal 1 button clicked');
+                    this.switchMeal('obrok1');
+                } else if (mealType === 'obrok2') {
+                    debugLog('[MealManager] 🔄 Meal 2 button clicked');
+                    this.switchMeal('obrok2');
+                }
+            }
+        });
 
         debugLog('[MealManager] 🎧 Card event listeners attached');
     }
@@ -199,6 +195,11 @@ export class MealManager {
             this.currentMeal = 'obrok1'; // Reset to first meal of new day
             debugLog(`[MealManager] ➡️ Moved to day: ${this.currentDay}`);
             this.renderCurrentMeal();
+            
+            // Notify other managers about day change
+            window.dispatchEvent(new CustomEvent('dayChanged', { 
+                detail: { day: this.currentDay, source: 'MealManager' } 
+            }));
         }
     }
 
@@ -208,6 +209,11 @@ export class MealManager {
             this.currentMeal = 'obrok2'; // Go to last meal of previous day
             debugLog(`[MealManager] ⬅️ Moved to day: ${this.currentDay}`);
             this.renderCurrentMeal();
+            
+            // Notify other managers about day change
+            window.dispatchEvent(new CustomEvent('dayChanged', { 
+                detail: { day: this.currentDay, source: 'MealManager' } 
+            }));
         }
     }
 

@@ -6,6 +6,14 @@ export class TrainingManager {
         this.container = document.getElementById(containerId);
         this.data = trainingData || window.planData;
         this.currentDay = this.getCurrentDay();
+        
+        // Listen for day changes from other managers
+        window.addEventListener('dayChanged', (event) => {
+            if (event.detail.source !== 'TrainingManager') {
+                debugLog(`[TrainingManager] Day changed by ${event.detail.source} to day ${event.detail.day}`);
+                this.setCurrentDay(event.detail.day);
+            }
+        });
     }
 
     init() {
@@ -68,6 +76,11 @@ export class TrainingManager {
         if (this.currentDay < 28) {
             this.currentDay++;
             this.renderCurrentDay();
+            
+            // Notify other managers about day change
+            window.dispatchEvent(new CustomEvent('dayChanged', { 
+                detail: { day: this.currentDay, source: 'TrainingManager' } 
+            }));
         }
     }
 
@@ -75,6 +88,11 @@ export class TrainingManager {
         if (this.currentDay > 1) {
             this.currentDay--;
             this.renderCurrentDay();
+            
+            // Notify other managers about day change
+            window.dispatchEvent(new CustomEvent('dayChanged', { 
+                detail: { day: this.currentDay, source: 'TrainingManager' } 
+            }));
         }
     }
 

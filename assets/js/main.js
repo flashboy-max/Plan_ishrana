@@ -2,6 +2,7 @@
 import { SupplementManager } from './components/SupplementManager.js';
 import { TrainingManager } from './components/TrainingManager.js';
 import { MealManager } from './components/MealManager.js';
+import { ChecklistManager } from './components/ChecklistManager.js';
 import { initializeIFTimer } from './components/ifTimer.js';
 import { planData } from '../data/plan/planData.js';
 
@@ -28,6 +29,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Meal Manager
     const mealManager = new MealManager('meals-container');
     mealManager.init();
+
+    // Initialize Checklist Manager
+    debugLog('📋 Initializing Checklist Manager...');
+    debugLog('📋 Container element:', document.getElementById('checklist-container'));
+    debugLog('📋 PlanData available:', !!window.planData);
+    
+    const checklistManager = new ChecklistManager('checklist-container');
+    debugLog('📋 ChecklistManager created:', checklistManager);
+
+    // Wait a bit for DOM to be ready
+    setTimeout(() => {
+        debugLog('📋 About to call init()...');
+        checklistManager.init().then(() => {
+            debugLog('📋 ChecklistManager init completed');
+        }).catch(error => {
+            console.error('📋 ChecklistManager init failed:', error);
+        });
+        window.checklistManager = checklistManager;
+        debugLog('✅ Checklist Manager initialized');
+    }, 100);
 
     // Initialize modal system
     if (typeof initializeModals === 'function') {

@@ -304,6 +304,23 @@
             </div>
         </div>
 
+        <!-- Meal Manager Container -->
+        <div class="card mb-6 sm:mb-8">
+            <div class="text-center mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-center">
+                    <i class="fas fa-utensils mr-3 text-green-400"></i>Dnevni Keto Obroci
+                </h2>
+                <p class="text-green-300">Optimizovani obroci sa alternativama i preciznim makronutrijentima</p>
+            </div>
+            <div id="meals-container" class="space-y-6">
+                <!-- Meal content will be loaded here -->
+                <div class="text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-green-400 text-2xl mb-4"></i>
+                    <p class="text-gray-400">Učitavam keto obroce...</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Checklist Container -->
         <div class="card mb-6 sm:mb-8">
             <div class="text-center mb-6">
@@ -424,6 +441,7 @@
     <!-- Load Data Files -->
     <script src="assets/data/supplements/supplements.js"></script>
     <script src="assets/data/meals/meals.js"></script>
+    <script type="module" src="assets/data/meals/mealsData.js"></script>
     <script type="module" src="assets/data/plan/planData.js"></script>
     <script type="module" src="assets/data/supplements/supplementPlanner.js"></script>
     <script type="module" src="assets/data/supplements/detailedSupplements.js"></script>
@@ -505,6 +523,8 @@
     <script type="module" src="assets/js/components/DataManager.js"></script>
     <script type="module" src="assets/js/components/EventHandler.js"></script>
     <script type="module" src="assets/js/components/SupplementCard.js"></script>
+    <script type="module" src="assets/js/components/MealCard.js"></script>
+    <script type="module" src="assets/js/components/MealManager.js"></script>
     <script type="module" src="assets/js/components/TrainingCard.js"></script>
     <script type="module" src="assets/js/components/TrainingManager.js"></script>
     <script type="module" src="assets/js/components/SupplementManager.js"></script>

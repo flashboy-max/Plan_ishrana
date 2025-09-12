@@ -1,6 +1,7 @@
 // main.js - Clean orchestrator for modular architecture
 import { SupplementManager } from './components/SupplementManager.js';
 import { TrainingManager } from './components/TrainingManager.js';
+import { MealManager } from './components/MealManager.js';
 import { initializeIFTimer } from './components/ifTimer.js';
 import { planData } from '../data/plan/planData.js';
 
@@ -24,6 +25,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const trainingManager = new TrainingManager('training-container');
     trainingManager.init();
 
+    // Initialize Meal Manager
+    const mealManager = new MealManager('meals-container');
+    mealManager.init();
+
     // Initialize modal system
     if (typeof initializeModals === 'function') {
         initializeModals();
@@ -39,6 +44,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 200); // Give planData.js time to load
 
     debugLog('✅ All managers and legacy functions initialized successfully');
+
+    // Error handling for module loading
+    window.addEventListener('error', (e) => {
+        if (e.filename && e.filename.includes('.js')) {
+            console.error(`❌ Module loading error: ${e.filename}:${e.lineno} - ${e.message}`);
+        }
+    });
+
+    window.addEventListener('unhandledrejection', (e) => {
+        console.error('❌ Unhandled promise rejection:', e.reason);
+    });
 });
 
 async function waitForData() {

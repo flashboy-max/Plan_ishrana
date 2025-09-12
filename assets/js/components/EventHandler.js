@@ -152,8 +152,10 @@ export class EventHandler {
         // Throttle resize events
         clearTimeout(this.resizeTimeout);
         this.resizeTimeout = setTimeout(() => {
-            this.supplementPlanner.invalidateCache();
-            this.supplementPlanner.renderInterface();
+            if (this.supplementPlanner && this.supplementPlanner.dataManager) {
+                this.supplementPlanner.dataManager.invalidateCache();
+                this.supplementPlanner.renderInterface();
+            }
             debugLog('[EventHandler] Window resize - re-render');
         }, 250);
     }

@@ -1,4 +1,4 @@
-# 🎯 DETALJNI TRENINZI - 28-Dnevni Program Transformacije
+a# 🎯 DETALJNI TRENINZI - 28-Dnevni Program Transformacije
 
 ## 📋 Program Overview
 - **Trajanje:** 28 dana (4 sedmice)

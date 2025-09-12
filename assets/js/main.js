@@ -65,25 +65,28 @@ async function waitForData() {
         const check = () => {
             attempts++;
             
-            if (window.SUPPLEMENTS_DATA && window.TRAINING_DATA && window.planData) {
+            if (window.SUPPLEMENTS_DATA && window.TRAINING_DATA && window.planData && window.MEALS_DATA) {
                 debugLog('✅ All data loaded:', {
                     supplements: !!window.SUPPLEMENTS_DATA,
                     training: !!window.TRAINING_DATA,
-                    plan: !!window.planData
+                    plan: !!window.planData,
+                    meals: !!window.MEALS_DATA
                 });
                 resolve();
             } else if (attempts >= maxAttempts) {
                 debugLog('⚠️ Timeout waiting for data, proceeding with available data:', {
                     supplements: !!window.SUPPLEMENTS_DATA,
                     training: !!window.TRAINING_DATA,
-                    plan: !!window.planData
+                    plan: !!window.planData,
+                    meals: !!window.MEALS_DATA
                 });
                 resolve(); // Proceed anyway
             } else {
                 debugLog('⏳ Waiting for data... (attempt ' + attempts + '/' + maxAttempts + ')', {
                     supplements: !!window.SUPPLEMENTS_DATA,
                     training: !!window.TRAINING_DATA,
-                    plan: !!window.planData
+                    plan: !!window.planData,
+                    meals: !!window.MEALS_DATA
                 });
                 setTimeout(check, 100);
             }

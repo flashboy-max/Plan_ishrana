@@ -32,6 +32,11 @@ export class MealManager {
         const card = new MealCard(mealData, this.currentMeal, this.currentDay);
         this.container.innerHTML = card.render();
 
+        // Setup card event listeners after DOM update
+        setTimeout(() => {
+            this.setupCardEventListeners();
+        }, 50);
+
         debugLog(`[MealManager] Rendered day ${this.currentDay}, meal ${this.currentMeal}`);
     }
 
@@ -104,6 +109,106 @@ export class MealManager {
                 }
             }
         });
+
+        // Listen for custom events from MealCard
+        document.addEventListener('mealNavigation', (e) => {
+            this.handleNavigation(e.detail.direction);
+        });
+
+        document.addEventListener('mealSwitch', (e) => {
+            this.switchMeal(e.detail.meal);
+        });
+    }
+
+    setupCardEventListeners() {
+        // Navigation buttons
+        const prevBtn = this.container.querySelector('.prev-meal');
+        const nextBtn = this.container.querySelector('.next-meal');
+        const meal1Btn = this.container.querySelector('.meal-switch-btn[data-meal="obrok1"]');
+        const meal2Btn = this.container.querySelector('.meal-switch-btn[data-meal="obrok2"]');
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                debugLog('[MealManager] 🔄 Previous button clicked');
+                this.handleNavigation(-1);
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                debugLog('[MealManager] 🔄 Next button clicked');
+                this.handleNavigation(1);
+            });
+        }
+
+        if (meal1Btn) {
+            meal1Btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                debugLog('[MealManager] 🔄 Meal 1 button clicked');
+                this.switchMeal('obrok1');
+            });
+        }
+
+        if (meal2Btn) {
+            meal2Btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                debugLog('[MealManager] 🔄 Meal 2 button clicked');
+                this.switchMeal('obrok2');
+            });
+        }
+
+        debugLog('[MealManager] 🎧 Card event listeners attached');
+    }
+
+    handleNavigation(direction) {
+        debugLog(`[MealManager] 🧭 Navigation triggered: ${direction > 0 ? 'next' : 'previous'}`);
+        debugLog(`[MealManager] 📍 Current: day ${this.currentDay}, meal ${this.currentMeal}`);
+
+        if (direction === 1) { // Next
+            if (this.currentMeal === 'obrok1') {
+                debugLog('[MealManager] ➡️ Switching to obrok2');
+                this.switchMeal('obrok2');
+            } else {
+                debugLog('[MealManager] ➡️ Going to next day');
+                this.nextDay();
+            }
+        } else if (direction === -1) { // Previous
+            if (this.currentMeal === 'obrok2') {
+                debugLog('[MealManager] ⬅️ Switching to obrok1');
+                this.switchMeal('obrok1');
+            } else {
+                debugLog('[MealManager] ⬅️ Going to previous day');
+                this.previousDay();
+            }
+        }
+    }
+
+    switchMeal(meal) {
+        if (meal === 'obrok1' || meal === 'obrok2') {
+            this.currentMeal = meal;
+            debugLog(`[MealManager] 🔄 Switched to meal: ${meal}`);
+            this.renderCurrentMeal();
+        }
+    }
+
+    nextDay() {
+        if (this.currentDay < 28) {
+            this.currentDay++;
+            this.currentMeal = 'obrok1'; // Reset to first meal of new day
+            debugLog(`[MealManager] ➡️ Moved to day: ${this.currentDay}`);
+            this.renderCurrentMeal();
+        }
+    }
+
+    previousDay() {
+        if (this.currentDay > 1) {
+            this.currentDay--;
+            this.currentMeal = 'obrok2'; // Go to last meal of previous day
+            debugLog(`[MealManager] ⬅️ Moved to day: ${this.currentDay}`);
+            this.renderCurrentMeal();
+        }
     }
 
     refresh() {
@@ -134,5 +239,3 @@ function debugLog(...args) {
         console.log('[MealManager]', ...args);
     }
 }
-
-export { MealManager };

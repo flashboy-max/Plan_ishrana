@@ -4272,6 +4272,228 @@ body {
     margin: 2px;
     box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
 }
+}
+
+/* ===== WEEKLY OVERVIEW TRAINING STILOVI ===== */
+
+/* Training Card u weekly overview */
+.training-card {
+    background: rgba(31, 41, 55, 0.6);
+    border: 1px solid #374151;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.training-card:hover {
+    border-color: #4b5563;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.training-type {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.training-icon {
+    color: #f59e0b;
+    font-size: 1.125rem;
+}
+
+.training-text {
+    color: #f3f4f6;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Exercise List */
+.exercise-list {
+    margin-top: 0.75rem;
+}
+
+.exercise-item {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.875rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.exercise-item:hover {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(75, 85, 99, 0.5);
+}
+
+.exercise-name {
+    color: #06b6d4;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.exercise-name i {
+    font-size: 0.875rem;
+    color: #f59e0b;
+}
+
+.exercise-sets {
+    color: #d1d5db;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.set-info {
+    display: inline-block;
+    margin-right: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.sets-label {
+    color: #9ca3af;
+    font-weight: 500;
+    margin-right: 0.375rem;
+}
+
+.sets-value {
+    color: #e5e7eb;
+    font-weight: 600;
+}
+
+/* Cardio i Rest Day stilovi */
+.cardio-info {
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.75rem;
+}
+
+.cardio-duration {
+    color: #06b6d4;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cardio-notes {
+    color: #d1d5db;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.rest-day-info {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.75rem;
+    text-align: center;
+}
+
+.rest-day-message {
+    color: #22c55e;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.rest-day-description {
+    color: #d1d5db;
+    font-size: 0.875rem;
+}
+
+/* Training Summary */
+.training-summary {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.875rem;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-item {
+    text-align: center;
+}
+
+.summary-label {
+    color: #9ca3af;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.summary-value {
+    color: #f59e0b;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+/* Responsive adaptacije za training */
+@media (max-width: 640px) {
+    .training-card {
+        padding: 1rem;
+    }
+    
+    .exercise-item {
+        padding: 0.75rem;
+    }
+    
+    .exercise-name {
+        font-size: 0.875rem;
+    }
+    
+    .exercise-sets {
+        font-size: 0.8125rem;
+    }
+    
+    .training-summary {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0.375rem 0;
+        border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+    }
+    
+    .summary-item:last-child {
+        border-bottom: none;
+    }
+    
+    .summary-label {
+        margin-bottom: 0;
+        text-align: left;
+    }
+    
+    .summary-value {
+        text-align: right;
+    }
+}
 
 .achievement-badge.locked {
     background: linear-gradient(135deg, #374151, #4b5563);

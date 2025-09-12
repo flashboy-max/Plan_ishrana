@@ -5,12 +5,26 @@ import { MealManager } from './components/MealManager.js';
 import { ChecklistManager } from './components/ChecklistManager.js';
 import { initializeIFTimer } from './components/ifTimer.js';
 import { planData } from '../data/plan/planData.js';
+import { TRAINING_DATA } from '../data/training/trainingData.js';
+import { MEALS_DATA } from '../data/meals/mealsData.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Ensure planData is available globally
     if (!window.planData && planData) {
         window.planData = planData;
         debugLog('📅 PlanData set from ES6 module import');
+    }
+    
+    // Ensure training data is available globally for weekly overview
+    if (!window.TRAINING_DATA && TRAINING_DATA) {
+        window.TRAINING_DATA = TRAINING_DATA;
+        debugLog('🏋️ Training data set globally for weekly overview');
+    }
+    
+    // Ensure meals data is available globally for weekly overview
+    if (!window.MEALS_DATA && MEALS_DATA) {
+        window.MEALS_DATA = MEALS_DATA;
+        debugLog('🍽️ Meals data set globally for weekly overview');
     }
     
     await waitForData();
@@ -272,6 +286,14 @@ function generateWeekHTML(startDay, endDay, containerId) {
 }
 
 function generateWeekDaySummary(dayData, dayNumber) {
+    debugLog(`📅 generateWeekDaySummary called for day ${dayNumber}`);
+    debugLog(`📅 dayData:`, dayData);
+    
+    // Debug for weekly overview
+    if (dayNumber === 1) {
+        debugLog('� generateWeekDaySummary called for day 1');
+    }
+    
     return `
         <div class="day-content">
             <div class="training-section mb-6">
@@ -280,10 +302,7 @@ function generateWeekDaySummary(dayData, dayNumber) {
                     <h4 class="section-title text-white">Trening</h4>
                 </div>
                 <div class="training-card">
-                    <div class="training-type">
-                        <i class="fas fa-dumbbell training-icon text-cyan-400"></i>
-                        <span class="training-text text-white">${dayData.trening || 'Trening za dan'}</span>
-                    </div>
+                    ${generateTrainingHTML(dayNumber, dayData)}
                 </div>
             </div>
 
@@ -316,14 +335,149 @@ function generateWeekDaySummary(dayData, dayNumber) {
 }
 
 function generateMealsHTML(dayNumber) {
+    // Koristi prave podatke iz mealsData.js
+    debugLog(`🍽️ generateMealsHTML called for day ${dayNumber}`);
+    debugLog(`🍽️ MEALS_DATA available:`, !!window.MEALS_DATA);
+    
+    if (!window.MEALS_DATA) {
+        debugLog('⚠️ MEALS_DATA not available, using fallback');
+        return generateFallbackMealsHTML(dayNumber);
+    }
+
+    // Ciklira kroz dane (1-7) ako je potreban dan veći od 7
+    const dayKey = ((dayNumber - 1) % 7) + 1;
+    debugLog(`🍽️ Using dayKey: ${dayKey} for dayNumber: ${dayNumber}`);
+    const dayMeals = window.MEALS_DATA[dayKey];
+    
+    if (!dayMeals) {
+        debugLog(`⚠️ No meals for day ${dayKey}, using fallback`);
+        debugLog(`🍽️ Available days:`, Object.keys(window.MEALS_DATA));
+        return generateFallbackMealsHTML(dayNumber);
+    }
+
+    debugLog(`🍽️ Found meals for day ${dayKey}:`, dayMeals);
+    const meals = [dayMeals.obrok1, dayMeals.obrok2];
+    
+    return meals.map((meal, index) => {
+        if (!meal) return '';
+        
+        return `<div class="meal-card">
+            <div class="meal-header">
+                <h5 class="meal-title">${meal.name}</h5>
+                <span class="meal-time" style="color: #9ca3af; font-size: 0.875rem;">${meal.time}</span>
+            </div>
+            <div class="meal-content">
+                <div class="macros-info">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Proteini: ${meal.macros.protein}g | Masti: ${meal.macros.fat}g | Ugljeni hidrati: ${meal.macros.carbs}g</span>
+                </div>
+                <div class="calories-info" style="color: #22c55e; font-weight: 600; margin: 0.5rem 0;">
+                    <i class="fas fa-fire"></i> ${meal.calories} kcal
+                </div>
+                <div class="prep-time" style="color: #fbbf24; font-size: 0.875rem;">
+                    <i class="fas fa-clock"></i> Priprema: ${meal.prepTime}
+                </div>
+                <div class="portion-info" style="color: #9ca3af; font-size: 0.8125rem; margin-top: 0.25rem;">
+                    Porcija: ${meal.portion}
+                </div>
+            </div>
+        </div>`;
+    }).filter(meal => meal !== '').join('');
+}
+
+// Generiraj training HTML sa detaljnim vježbama
+function generateTrainingHTML(dayNumber, dayData) {
+    debugLog(`🏋️ generateTrainingHTML called for day ${dayNumber}`);
+    debugLog(`🏋️ dayData.trening: ${dayData.trening}`);
+    
+    // Provjeri da li su dostupni training podaci
+    if (!window.TRAINING_DATA) {
+        debugLog('⚠️ TRAINING_DATA not available, using fallback with dayData.trening');
+        return `
+            <div class="training-type">
+                <i class="fas fa-dumbbell training-icon text-cyan-400"></i>
+                <span class="training-text text-white">${dayData.trening || 'Trening za dan'}</span>
+            </div>
+        `;
+    }
+
+    const trainingKey = `dan${dayNumber}`;
+    const trainingData = window.TRAINING_DATA[trainingKey];
+
+    if (!trainingData) {
+        debugLog(`⚠️ No training data for ${trainingKey}, using dayData.trening: ${dayData.trening}`);
+        return `
+            <div class="training-type">
+                <i class="fas fa-dumbbell training-icon text-cyan-400"></i>
+                <span class="training-text text-white">${dayData.trening || 'Trening za dan'}</span>
+            </div>
+        `;
+    }
+
+    // Koristi title iz planData (dayData.trening) umjesto trainingData.title za konzistentnost
+    const displayTitle = dayData.trening || trainingData.title;
+    debugLog(`🏋️ Using title: ${displayTitle}`);
+
+    return `
+        <div class="training-header mb-4">
+            <div class="training-type">
+                <i class="fas fa-dumbbell training-icon text-cyan-400 mr-2"></i>
+                <span class="training-text text-white font-bold text-lg">${displayTitle}</span>
+            </div>
+        </div>
+        
+        <div class="exercises-list">
+            <div class="exercises-header mb-3">
+                <i class="fas fa-list-ul text-purple-400 mr-2"></i>
+                <span class="text-purple-300 font-semibold">Vježbe (${trainingData.exercises.length})</span>
+            </div>
+            
+            <div class="exercises-grid space-y-2">
+                ${trainingData.exercises.map((exercise, index) => `
+                    <div class="exercise-item bg-gray-800/40 p-3 rounded-lg border border-gray-700 hover:border-cyan-500/30 transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="exercise-number bg-cyan-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center mr-3">
+                                    ${index + 1}
+                                </span>
+                                <span class="exercise-name text-white font-medium">${exercise.name}</span>
+                            </div>
+                            <div class="exercise-details text-right">
+                                <div class="sets-reps text-cyan-300 text-sm font-semibold">
+                                    ${exercise.sets} × ${exercise.reps}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="training-stats mt-4 p-3 bg-gradient-to-r from-cyan-900/30 to-blue-900/30 rounded-lg border border-cyan-600/20">
+                <div class="flex items-center justify-between text-sm">
+                    <div class="flex items-center text-cyan-300">
+                        <i class="fas fa-stopwatch mr-2"></i>
+                        <span>Ukupno vježbi: <strong>${trainingData.exercises.length}</strong></span>
+                    </div>
+                    <div class="flex items-center text-blue-300">
+                        <i class="fas fa-fire mr-2"></i>
+                        <span>Tip: <strong>${trainingData.title}</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Fallback funkcija za slučaj da nisu učitani podaci
+function generateFallbackMealsHTML(dayNumber) {
     const meals = [
         {
-            title: "Obrok 1 (oko 13:30)",
+            title: "Obrok 1 (oko 11:30)",
             description: getMealForDay(dayNumber, 1),
             macros: "~30-40g proteina, ~25-35g masti, ~8-12g ugljenih hidrata"
         },
         {
-            title: "Obrok 2 (oko 17:30)",
+            title: "Obrok 2 (oko 16:30)",
             description: getMealForDay(dayNumber, 2),
             macros: "~35-45g proteina, ~20-30g masti, ~10-15g ugljenih hidrata"
         }

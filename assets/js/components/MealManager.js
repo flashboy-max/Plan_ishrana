@@ -31,9 +31,16 @@ export class MealManager {
             return;
         }
 
+        debugLog(`[MealManager] renderCurrentMeal - currentDay: ${this.currentDay}, currentMeal: ${this.currentMeal}`);
+        debugLog(`[MealManager] Data available:`, !!this.data);
+        debugLog(`[MealManager] Data keys:`, this.data ? Object.keys(this.data) : 'none');
+
         const dayData = this.data[this.currentDay];
+        debugLog(`[MealManager] dayData for ${this.currentDay}:`, dayData);
+        
         if (!dayData || !dayData[this.currentMeal]) {
             console.error(`[MealManager] No data for day ${this.currentDay}, meal ${this.currentMeal}`);
+            debugLog(`[MealManager] Available meals for day:`, dayData ? Object.keys(dayData) : 'none');
             return;
         }
 
@@ -53,7 +60,10 @@ export class MealManager {
         const startDate = new Date('2025-09-14');
         const today = new Date();
         const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
-        return Math.min(Math.max(diffDays, 1), 28);
+        const calculatedDay = Math.min(Math.max(diffDays, 1), 28);
+        
+        debugLog(`[MealManager] getCurrentDay: today=${today.toDateString()}, startDate=${startDate.toDateString()}, diffDays=${diffDays}, calculatedDay=${calculatedDay}`);
+        return calculatedDay;
     }
 
     setCurrentDay(day) {

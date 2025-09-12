@@ -52,7 +52,39 @@ export class TrainingCard {
     }
 
     renderTrainingDay() {
-        // Extract training exercises from checklist
+        // Koristi detaljne vježbe iz TRAINING_DATA ako su dostupne
+        if (window.TRAINING_DATA) {
+            const trainingKey = `dan${this.data.day}`;
+            const trainingData = window.TRAINING_DATA[trainingKey];
+            
+            if (trainingData && trainingData.exercises && trainingData.exercises.length > 0) {
+                return `
+                    <div class="bg-blue-900/20 border border-blue-600/30 rounded-lg p-4">
+                        <h3 class="text-blue-300 font-semibold mb-3 flex items-center">
+                            <i class="fas fa-dumbbell mr-2"></i>
+                            Detaljne Vježbe
+                        </h3>
+                        <div class="space-y-2">
+                            ${trainingData.exercises.map((exercise, index) => this.renderDetailedExercise(exercise, index)).join('')}
+                        </div>
+                        <div class="mt-4 p-3 bg-gradient-to-r from-cyan-900/30 to-blue-900/30 rounded-lg border border-cyan-600/20">
+                            <div class="flex items-center justify-between text-sm">
+                                <div class="flex items-center text-cyan-300">
+                                    <i class="fas fa-stopwatch mr-2"></i>
+                                    <span>Ukupno vježbi: <strong>${trainingData.exercises.length}</strong></span>
+                                </div>
+                                <div class="flex items-center text-blue-300">
+                                    <i class="fas fa-fire mr-2"></i>
+                                    <span>Tip: <strong>${trainingData.title}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Fallback na checklist vježbe ako nema detaljnih podataka
         const trainingItems = this.data.checklist.filter(item => 
             item.toLowerCase().includes('trening:')
         );
@@ -80,6 +112,30 @@ export class TrainingCard {
                 <i class="fas fa-bed text-green-400 text-3xl mb-3"></i>
                 <h3 class="text-green-300 font-semibold mb-2">Dan Odmora</h3>
                 <p class="text-gray-300">Lagana kardio aktivnost ili potpuni odmor</p>
+            </div>
+        `;
+    }
+
+    renderDetailedExercise(exercise, index) {
+        return `
+            <div class="exercise-item bg-gray-800/40 p-3 rounded-lg border border-gray-700 hover:border-cyan-500/30 transition-all">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="exercise-number bg-cyan-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center mr-3">
+                            ${index + 1}
+                        </span>
+                        <span class="exercise-name text-white font-medium">${exercise.name}</span>
+                    </div>
+                    <div class="exercise-details text-right">
+                        <div class="sets-reps text-cyan-300 text-sm font-semibold">
+                            ${exercise.sets} × ${exercise.reps}
+                        </div>
+                        <button class="exercise-complete-btn mt-1 px-2 py-1 bg-green-600/20 hover:bg-green-600/30 text-green-300 rounded text-xs transition-colors" data-exercise="${exercise.name}">
+                            <i class="fas fa-check mr-1"></i>
+                            Završeno
+                        </button>
+                    </div>
+                </div>
             </div>
         `;
     }

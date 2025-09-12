@@ -73,9 +73,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize collapsible sections
     initializeCollapsibleSections();
     debugLog('✅ Collapsible sections initialized');
-
-    // Initialize legacy functions for accordion and weekly content
-    initializeAccordion();
     
     // Initialize weekly content with graceful fallback
     setTimeout(() => {
@@ -581,8 +578,19 @@ function initializeCollapsibleSections() {
         // Otvori Trening Program po defaultu
         const trainingButton = document.querySelector('#training-chevron')?.closest('.accordion-button');
         if (trainingButton) {
+            debugLog('🏋️ Found training button, auto-opening...');
             trainingButton.click();
             debugLog('🏋️ Auto-opened Training Program section');
+        } else {
+            debugLog('❌ Training button not found');
+            // Alternative selector
+            const trainingButtonAlt = document.querySelector('[data-section="training"] .accordion-button, .accordion-button:has(#training-chevron)');
+            if (trainingButtonAlt) {
+                debugLog('🏋️ Found training button via alternative selector');
+                trainingButtonAlt.click();
+            } else {
+                debugLog('❌ No training button found at all');
+            }
         }
-    }, 500);
+    }, 1000); // Increase timeout
 }

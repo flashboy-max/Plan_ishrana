@@ -213,10 +213,3 @@ export class TrainingCard {
         debugLog(`[TrainingCard] Card for ${this.data?.id} destroyed`);
     }
 }
-
-// Debug helper
-function debugLog(...args) {
-    if (typeof window !== 'undefined' && window.debugMode) {
-        console.log('[TrainingCard]', ...args);
-    }
-}

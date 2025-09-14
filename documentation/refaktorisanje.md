@@ -455,7 +455,7 @@ export class TrainingManager {
 
     getCurrentDay() {
         // Izračunaj trenutni dan od startDate
-        const startDate = new Date('2025-09-14');
+        const startDate = new Date('2025-09-15');
         const today = new Date();
         const diffTime = today - startDate;
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;

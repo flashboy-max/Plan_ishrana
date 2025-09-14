@@ -243,7 +243,7 @@ export class ChecklistManager {
     }
 
     getCurrentDay() {
-        const startDate = new Date('2025-09-14');
+        const startDate = new Date('2025-09-15');
         const currentDate = new Date();
         const diffTime = Math.abs(currentDate - startDate);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

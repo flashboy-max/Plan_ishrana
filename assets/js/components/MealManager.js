@@ -57,7 +57,7 @@ export class MealManager {
     }
 
     getCurrentDay() {
-        const startDate = new Date('2025-09-14');
+        const startDate = new Date('2025-09-15');
         const today = new Date();
         const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
         const calculatedDay = Math.min(Math.max(diffDays, 1), 28);

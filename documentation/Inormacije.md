@@ -9,7 +9,7 @@ dob: "1984-04-12"
 godine: 41
 visina_cm: 181
 tezina_start_kg: 101
-datum_pocetka_plana: "2025-09-14"
+datum_pocetka_plana: "2025-09-15"
 rezim: "Keto + IF 18/6"
 deficit: "10–15% ispod TDEE"
 aktivnost_bazna: "~7000 koraka/dan (nisko → umjereno aktivan)"
@@ -78,7 +78,7 @@ san: "7–8 h/noć"
 ### Izabrani Protocol
 - **Tip:** Simple (Početni)
 - **Troškovi:** €65/mesec (procena)
-- **Početak:** 2025-09-14
+- **Početak:** 2025-09-15
 - **Link:** [suplementi_simple.md](suplementi_simple.md) | [suplementi_advanced.md](suplementi_advanced.md)
 
 ### Trenutni Suplementi (Simple Protocol)

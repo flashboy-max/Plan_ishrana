@@ -203,7 +203,7 @@ function generateWeekHTML(startDay, endDay, containerId) {
             continue;
         }
 
-        const dayDate = new Date('2025-09-14');
+        const dayDate = new Date('2025-09-15');
         dayDate.setDate(dayDate.getDate() + i - 1);
 
         const dayDetails = generateWeekDaySummary(day, i);
@@ -522,7 +522,7 @@ function getMealForDay(dayNumber, mealNumber) {
 }
 
 function getCurrentDay() {
-    const startDate = new Date('2025-09-14');
+    const startDate = new Date('2025-09-15');
     const today = new Date();
     const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
     return Math.min(Math.max(diffDays, 1), 28);
@@ -573,24 +573,24 @@ function initializeCollapsibleSections() {
         }
     });
 
-    // Set default state - možeš da promjeniš koji su otvoreni po defaultu
-    setTimeout(() => {
-        // Otvori Trening Program po defaultu
-        const trainingButton = document.querySelector('#training-chevron')?.closest('.accordion-button');
-        if (trainingButton) {
-            debugLog('🏋️ Found training button, auto-opening...');
-            trainingButton.click();
-            debugLog('🏋️ Auto-opened Training Program section');
-        } else {
-            debugLog('❌ Training button not found');
-            // Alternative selector
-            const trainingButtonAlt = document.querySelector('[data-section="training"] .accordion-button, .accordion-button:has(#training-chevron)');
-            if (trainingButtonAlt) {
-                debugLog('🏋️ Found training button via alternative selector');
-                trainingButtonAlt.click();
-            } else {
-                debugLog('❌ No training button found at all');
-            }
-        }
-    }, 1000); // Increase timeout
+    // Set default state - automatsko otvaranje isključeno
+    // setTimeout(() => {
+    //     // Otvori Trening Program po defaultu
+    //     const trainingButton = document.querySelector('#training-chevron')?.closest('.accordion-button');
+    //     if (trainingButton) {
+    //         debugLog('🏋️ Found training button, auto-opening...');
+    //         trainingButton.click();
+    //         debugLog('🏋️ Auto-opened Training Program section');
+    //     } else {
+    //         debugLog('❌ Training button not found');
+    //         // Alternative selector
+    //         const trainingButtonAlt = document.querySelector('[data-section="training"] .accordion-button, .accordion-button:has(#training-chevron)');
+    //         if (trainingButtonAlt) {
+    //             debugLog('🏋️ Found training button via alternative selector');
+    //             trainingButtonAlt.click();
+    //         } else {
+    //             debugLog('❌ No training button found at all');
+    //         }
+    //     }
+    // }, 1000); // Increase timeout
 }

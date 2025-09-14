@@ -809,7 +809,7 @@ function debugLog(...args) {
     }
 
     getCurrentDay() {
-        const startDate = new Date('2025-09-14');
+        const startDate = new Date('2025-09-15');
         const today = new Date();
         const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
         const currentDay = Math.min(Math.max(diffDays, 1), 28);
@@ -822,7 +822,7 @@ function debugLog(...args) {
     }
 
     getCurrentDate() {
-        const startDate = new Date('2025-09-14');
+        const startDate = new Date('2025-09-15');
         const today = new Date();
         return today;
     }

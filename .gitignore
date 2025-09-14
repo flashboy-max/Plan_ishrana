@@ -1,0 +1,19 @@
+# Debug reports - lokalni debug fajlovi se ne commit-uju
+debug-reports/
+*.log
+*.json.log
+
+# Node modules (if using npm in future)
+node_modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/settings.json
+.idea/
+
+# Temporary files
+*.tmp
+*.temp

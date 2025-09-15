@@ -216,6 +216,230 @@
             </div>
         </div>
 
+        <!-- Pregled Suplementacije Dugme -->
+        <div class="card mb-6 sm:mb-8" id="supplements-preview-container">
+            <div class="text-center">
+                <button id="supplements-preview-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center">
+                    <i class="fas fa-pills mr-3"></i>
+                    <span>📋 Pregled Suplementacije</span>
+                    <i class="fas fa-chevron-down ml-3 transition-transform duration-300" id="supplements-chevron"></i>
+                </button>
+            </div>
+            
+            <!-- Supplements Modal/Tabs Content -->
+            <div id="supplements-modal" class="hidden mt-4 bg-gray-800/50 rounded-lg p-6 border border-gray-600">
+                <!-- Tab Navigation -->
+                <div class="flex border-b border-gray-600 mb-6">
+                    <button id="tab-training-day" class="tab-btn active flex-1 py-3 px-4 text-center font-medium transition-all hover:bg-gray-700/50">
+                        <i class="fas fa-dumbbell mr-2"></i>
+                        🔥 Dan Treninga
+                    </button>
+                    <button id="tab-rest-day" class="tab-btn flex-1 py-3 px-4 text-center font-medium transition-all hover:bg-gray-700/50">
+                        <i class="fas fa-couch mr-2"></i>
+                        💚 Dan Odmora
+                    </button>
+                </div>
+                
+                <!-- Training Day Content -->
+                <div id="training-day-content" class="tab-content">
+                    <h4 class="text-xl font-bold text-white mb-4 flex items-center">
+                        <i class="fas fa-fire mr-2 text-red-500"></i>
+                        Scenario A: Intenzivan Trening
+                    </h4>
+                    
+                    <!-- Timeline -->
+                    <div class="space-y-4">
+                        <div class="supplement-time-block">
+                            <div class="time-badge">07:00</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-cyan-400">🌅 Jutarnji Ritual</h5>
+                                <ul class="supplement-list">
+                                    <li>💧 Čaša mlake vode + prstohvat soli</li>
+                                    <li>🌶️ Kurkuma + crni biber + đumbir + kajenska paprika napitak</li>
+                                    <li>⏰ Pauza 30 minuta bez hrane</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">07:40</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-purple-400">🧬 Pre Obroka</h5>
+                                <ul class="supplement-list">
+                                    <li>💊 <strong>NMN:</strong> 250-500mg (na prazan stomak)</li>
+                                    <li>🥥 <strong>MCT C8:</strong> 1 kašičica</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block highlight">
+                            <div class="time-badge">10:45</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-red-400">⚡ PRE-WORKOUT (30-60min pre treninga)</h5>
+                                <ul class="supplement-list">
+                                    <li>🔥 <strong>FLEX PRO:</strong> 1 puna merica</li>
+                                    <li>⚡ <strong>CreGAAtine:</strong> 1 kesica</li>
+                                </ul>
+                                <div class="supplement-note">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    FLEX PRO pruža najjaču podršku zglobovima pod stresom
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">11:30</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-green-400">🍽️ Obrok 1 (posle treninga)</h5>
+                                <ul class="supplement-list">
+                                    <li>☀️ <strong>Vitamin D3 + K2:</strong> 2000 IU + 100µg</li>
+                                    <li>🐟 <strong>Omega-3:</strong> 2-3 kapsule (EPA+DHA 1-2g)</li>
+                                    <li>🧠 <strong>B-complex:</strong> 1 kapsula (3-4x nedeljno)</li>
+                                    <li>🔄 <strong>TMG:</strong> 1000mg (NOW Foods)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">16:30</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-blue-400">🍽️ Obrok 2</h5>
+                                <ul class="supplement-list">
+                                    <li>🐟 <strong>Omega-3:</strong> Ostatak do dnevnog cilja</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">21:00</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-indigo-400">🌙 Večernji Protokol</h5>
+                                <ul class="supplement-list">
+                                    <li>💤 <strong>Pon, Sre, Pet:</strong> ZMA PRO (na prazan stomak)</li>
+                                    <li>🧘 <strong>Ostale noći:</strong> Magnesium Citrate 300-400mg</li>
+                                    <li>🌿 <strong>Opciono:</strong> Ashwagandha 300-600mg</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rest Day Content -->
+                <div id="rest-day-content" class="tab-content hidden">
+                    <h4 class="text-xl font-bold text-white mb-4 flex items-center">
+                        <i class="fas fa-leaf mr-2 text-green-500"></i>
+                        Scenario B: Laki Trening / Odmor
+                    </h4>
+                    
+                    <!-- Timeline -->
+                    <div class="space-y-4">
+                        <div class="supplement-time-block">
+                            <div class="time-badge">07:00</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-cyan-400">🌅 Jutarnji Ritual</h5>
+                                <ul class="supplement-list">
+                                    <li>💧 Čaša mlake vode + prstohvat soli</li>
+                                    <li>🌶️ Kurkuma + crni biber + đumbir + kajenska paprika napitak</li>
+                                    <li>⏰ Pauza 30 minuta bez hrane</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">07:40</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-purple-400">🧬 Pre Obroka</h5>
+                                <ul class="supplement-list">
+                                    <li>💊 <strong>NMN:</strong> 250-500mg (na prazan stomak)</li>
+                                    <li>🥥 <strong>MCT C8:</strong> 1 kašičica</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block highlight">
+                            <div class="time-badge">10:45</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-green-400">💚 Jutarnji Protokol</h5>
+                                <ul class="supplement-list">
+                                    <li>🦴 <strong>Applied Collagen:</strong> 10-15g</li>
+                                    <li>🍊 <strong>Vitamin C:</strong> 100-200mg</li>
+                                    <li>⚡ <strong>CreGAAtine:</strong> 1 kesica (ako je dan treninga)</li>
+                                </ul>
+                                <div class="supplement-note">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    Odlična navika za oporavak vezivnog tkiva
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">11:30</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-green-400">🍽️ Obrok 1</h5>
+                                <ul class="supplement-list">
+                                    <li>☀️ <strong>Vitamin D3 + K2:</strong> 2000 IU + 100µg</li>
+                                    <li>🐟 <strong>Omega-3:</strong> 2-3 kapsule (EPA+DHA 1-2g)</li>
+                                    <li>🧠 <strong>B-complex:</strong> 1 kapsula (3-4x nedeljno)</li>
+                                    <li>🔄 <strong>TMG:</strong> 1000mg (NOW Foods)</li>
+                                    <li>⚡ <strong>CreGAAtine:</strong> 1 kesica (ako nije uzet ranije)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">Tokom dana</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-blue-400">💧 Hidratacija</h5>
+                                <ul class="supplement-list">
+                                    <li>💧 <strong>Hydration+:</strong> ½ do 1 porcija (po potrebi)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">16:30</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-blue-400">🍽️ Obrok 2</h5>
+                                <ul class="supplement-list">
+                                    <li>🐟 <strong>Omega-3:</strong> Ostatak do dnevnog cilja</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="supplement-time-block">
+                            <div class="time-badge">21:00</div>
+                            <div class="supplement-details">
+                                <h5 class="font-semibold text-indigo-400">🌙 Večernji Protokol</h5>
+                                <ul class="supplement-list">
+                                    <li>💤 <strong>Pon, Sre, Pet:</strong> ZMA PRO (na prazan stomak)</li>
+                                    <li>🧘 <strong>Ostale noći:</strong> Magnesium Citrate 300-400mg</li>
+                                    <li>🌿 <strong>Opciono:</strong> Ashwagandha 300-600mg</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Reference -->
+                <div class="mt-6 p-4 bg-gray-900/50 rounded-lg border border-gray-600">
+                    <h5 class="font-semibold text-white mb-3 flex items-center">
+                        <i class="fas fa-tachometer-alt mr-2"></i>
+                        Quick Reference
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <div class="text-red-400 font-medium">🔥 Težak Trening:</div>
+                            <div class="text-gray-300">FLEX PRO + CreGAAtine pre treninga</div>
+                        </div>
+                        <div>
+                            <div class="text-green-400 font-medium">💚 Lak/Odmor:</div>
+                            <div class="text-gray-300">Collagen + Vit C + CreGAAtine</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Profil i Ciljevi -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8 items-start">
             <div class="card h-fit">

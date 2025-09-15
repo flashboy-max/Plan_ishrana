@@ -593,4 +593,63 @@ function initializeCollapsibleSections() {
     //         }
     //     }
     // }, 1000); // Increase timeout
+    
+    // Initialize Supplements Preview functionality
+    initSupplementsPreview();
+}
+
+// ===== SUPPLEMENTS PREVIEW FUNCTIONALITY =====
+function initSupplementsPreview() {
+    const previewBtn = document.getElementById('supplements-preview-btn');
+    const modal = document.getElementById('supplements-modal');
+    const chevron = document.getElementById('supplements-chevron');
+    const trainingTab = document.getElementById('tab-training-day');
+    const restTab = document.getElementById('tab-rest-day');
+    const trainingContent = document.getElementById('training-day-content');
+    const restContent = document.getElementById('rest-day-content');
+    
+    if (!previewBtn || !modal) {
+        debugLog('❌ Supplements preview elements not found');
+        return;
+    }
+    
+    // Toggle modal visibility
+    previewBtn.addEventListener('click', () => {
+        const isHidden = modal.classList.contains('hidden');
+        
+        if (isHidden) {
+            modal.classList.remove('hidden');
+            chevron.classList.add('rotate-180');
+            debugLog('📋 Opened supplements preview');
+        } else {
+            modal.classList.add('hidden');
+            chevron.classList.remove('rotate-180');
+            debugLog('📋 Closed supplements preview');
+        }
+    });
+    
+    // Tab switching functionality
+    function switchTab(activeTab, activeContent, inactiveTab, inactiveContent) {
+        // Update tab buttons
+        activeTab.classList.add('active');
+        inactiveTab.classList.remove('active');
+        
+        // Update content visibility
+        activeContent.classList.remove('hidden');
+        inactiveContent.classList.add('hidden');
+        
+        debugLog(`📋 Switched to ${activeTab.id} tab`);
+    }
+    
+    // Training day tab
+    trainingTab?.addEventListener('click', () => {
+        switchTab(trainingTab, trainingContent, restTab, restContent);
+    });
+    
+    // Rest day tab  
+    restTab?.addEventListener('click', () => {
+        switchTab(restTab, restContent, trainingTab, trainingContent);
+    });
+    
+    debugLog('✅ Supplements preview initialized successfully');
 }
